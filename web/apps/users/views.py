@@ -78,7 +78,7 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
     # 设置认证用户才能有权访问
     permission_classes = [IsAuthenticated, UserPermission]
 
-    def upload_avatar(self, request):
+    def upload_avatar(self, request, *args, **kwargs):
         """上传用户头像"""
         avatar = request.data.get('avatar')
         if not avatar:
@@ -109,7 +109,7 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         else:
             return {'error': '验证码错误'}
 
-    def bind_mobile(self, request):
+    def bind_mobile(self, request, *args, **kwargs):
         """绑定手机号"""
         code = request.data.get('code')
         codeID = request.data.get('codeID')
@@ -123,7 +123,7 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         user.save()
         return Response({'message': "绑定成功"}, status=status.HTTP_200_OK)
 
-    def unbind_mobile(self, request):
+    def unbind_mobile(self, request, *args, **kwargs):
         """解绑手机号"""
         code = request.data.get('code')
         codeID = request.data.get('codeID')
@@ -136,6 +136,32 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         user.mobile = ''
         user.save()
         return Response({'message': '解绑成功'}, status=status.HTTP_200_OK)
+
+    def update_nickname(self, request, *args, **kwargs):
+        """修改昵称"""
+        last_name = request.data.get('last_name')
+        if not last_name:
+            return Response({'error': '参数不能为空'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        user = self.get_object()
+        user.last_name = last_name
+        user.save()
+        return Response({'message': '修改成功'}, status=status.HTTP_200_OK)
+
+    def update_email(self, request, *args, **kwargs):
+        """修改邮箱"""
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': '参数不能为空'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if not re.match(r'^([a-zA-Z\d][\w-]{2,})@(\w{2,})\.([a-z]{2,})(\.[a-z]{2,})?$', email):
+            return Response({'error': '邮箱格式错误'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        user = self.get_object()
+        if user.email == email:
+            return Response({'error': '此邮箱与绑定邮箱相同'}, status=status.HTTP_400_BAD_REQUEST)
+        if Users.objects.filter(email=email).exists():
+            return Response({'error': '此邮箱已被绑定'}, status=status.HTTP_400_BAD_REQUEST)
+        user.email = email
+        user.save()
+        return Response({'message': '修改成功'}, status=status.HTTP_200_OK)
 
 
 class FileView(APIView):
@@ -160,7 +186,7 @@ class AddressView(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    def set_default_address(self, request):
+    def set_default_address(self, request, *args, **kwargs):
         obj = self.get_object()
         obj.is_default = True
         obj.save()

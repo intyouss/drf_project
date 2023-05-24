@@ -35,5 +35,11 @@ urlpatterns = [
     })),
     path('<int:pk>/mobile/unbind', UserView.as_view({
         'put': 'unbind_mobile'
+    })),
+    path('<int:pk>/nickname/update', UserView.as_view({
+        'put': 'update_nickname'
+    })),
+    path('<int:pk>/email/update', UserView.as_view({
+        'put': 'update_email'
     }))
 ]

@@ -14,10 +14,7 @@ import sys
 import os
 from datetime import timedelta
 from pathlib import Path
-try:
-    from local_settings import *
-except ImportError:
-    pass
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -211,3 +208,9 @@ TEMPLATE_CODE = ''
 ACCESS_KEY_ID = ''  # 您的 AccessKey ID
 ACCESS_KEY_SECRET = 'r'  # AccessKey Secret
 ENDPOINT = ''
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
