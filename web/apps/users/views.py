@@ -163,6 +163,26 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         user.save()
         return Response({'message': '修改成功'}, status=status.HTTP_200_OK)
 
+    def update_password(self, request, *args, **kwargs):
+        """修改密码"""
+        code = request.data.get('code')
+        codeID = request.data.get('codeID')
+        mobile = request.data.get('mobile')
+        password = request.data.get('password')
+        password_confirmation = request.data.get('password_confirmation')
+        user = self.get_object()
+        if user.mobile != mobile:
+            return Response({'error': '此手机号不是该用户绑定号码'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if result := self.verify_auth_code(code, codeID, mobile):
+            return Response(result, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if not password or not password_confirmation:
+            return Response({'error': "参数不能为空"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if password != password_confirmation:
+            return Response({'error': "两次输入密码不相同"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        user.set_password(password)
+        user.save()
+        return Response({'message': '修改成功'}, status=status.HTTP_200_OK)
+
 
 class FileView(APIView):
     """获取头像文件"""

@@ -41,5 +41,8 @@ urlpatterns = [
     })),
     path('<int:pk>/email/update', UserView.as_view({
         'put': 'update_email'
+    })),
+    path('<int:pk>/password/update', UserView.as_view({
+        'put': 'update_password'
     }))
 ]
