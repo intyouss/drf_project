@@ -2,7 +2,6 @@ import os
 import random
 import re
 from datetime import datetime
-import pytz
 from django.http import FileResponse
 from rest_framework import status
 from rest_framework.response import Response
@@ -10,15 +9,14 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.viewsets import GenericViewSet, mixins
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-
 from common.SMS import AliYunSMS
 from .models import Users, Address, AuthCode
 from .permissions.Address import AddressPermission
 from .permissions.users import UserPermission
 from .serializers.address import AddressSerializer
 from .serializers.users import UserSerializer
-from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
 
