@@ -14,6 +14,10 @@ import sys
 import os
 from datetime import timedelta
 from pathlib import Path
+try:
+    from local_settings import *
+except ImportError:
+    pass
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -95,8 +99,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'web',
         'USER': 'intyou',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
+        'PASSWORD': '111111',
+        'HOST': 'xxx.xxx.xxx.xxx',
         'PORT': '3306'
     }
 }
@@ -202,8 +206,8 @@ MEDIA_ROOT = BASE_DIR / 'file/image'
 MEDIA_URL = 'file/image/'
 
 # 阿里云SMS
-SIGN_NAME = '阿里云短信测试'
-TEMPLATE_CODE = 'SMS_154950909'
-ACCESS_KEY_ID = 'LTAI5tPYhkpcLYSGV74BfMki'  # 您的 AccessKey ID
-ACCESS_KEY_SECRET = 'hHeF02NFKX8ld18bj98bOp4Q0EI2sr'  # AccessKey Secret
-ENDPOINT = 'dysmsapi.aliyuncs.com'
+SIGN_NAME = ''
+TEMPLATE_CODE = ''
+ACCESS_KEY_ID = ''  # 您的 AccessKey ID
+ACCESS_KEY_SECRET = 'r'  # AccessKey Secret
+ENDPOINT = ''
