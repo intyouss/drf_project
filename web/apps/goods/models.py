@@ -78,7 +78,7 @@ class Collect(models.Model):
 
     class Meta:
         db_table = 'goods_collect'
-        verbose_name = '收藏商品'
+        verbose_name = '收藏商品表'
         verbose_name_plural = verbose_name
 
     def __str__(self):
