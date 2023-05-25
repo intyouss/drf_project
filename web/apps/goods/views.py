@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from .models import GoodsGroup, GoodsCarousel, Goods
 from .serializers.goods import GoodsSerializer
 from .serializers.goods_carousel import GoodsCarouselSerializer
@@ -23,3 +24,12 @@ class IndexView(APIView):
             'goods': goodsSer.data
         }
         return Response(result, status=status.HTTP_200_OK)
+
+
+class GoodsView(ReadOnlyModelViewSet):
+    """商品视图"""
+    queryset = Goods.objects.filter(is_on=True)
+    serializer_class = GoodsSerializer
+    filterset_fields = ('group', 'is_recommend')
+    # 通过价格、销量排序、创建时间排序
+    ordering_fields = ('sales', 'price', 'created_time')

@@ -163,6 +163,7 @@ REST_FRAMEWORK = {
     # 配置过滤器
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
     ),
     # 配置限流频率
     'DEFAULT_THROTTLE_RATES': {
