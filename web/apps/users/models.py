@@ -27,7 +27,7 @@ class Address(models.Model):
     objects = Manager()
 
     class Meta:
-        db_table = 'address'
+        db_table = 'users_address'
         verbose_name = '收货地址表'
 
 
@@ -46,7 +46,7 @@ class Area(models.Model):
     level = models.IntegerField(choices=level_choice, verbose_name='区域等级')
 
     class Meta:
-        db_table = 'area'
+        db_table = 'users_area'
         verbose_name = '地区表'
 
 
@@ -61,5 +61,5 @@ class AuthCode(models.Model):
     objects = Manager()
 
     class Meta:
-        db_table = 'auth_code'
+        db_table = 'users_auth_code'
         verbose_name = '验证码表'
