@@ -8,20 +8,20 @@ class GoodsGroupAdmin(admin.ModelAdmin):
 
 
 @admin.register(Goods)
-class GoodsGroupAdmin(admin.ModelAdmin):
+class GoodsAdmin(admin.ModelAdmin):
     list_display = ['name', 'group', 'price', 'stock', 'sales', 'is_on']
 
 
 @admin.register(Detail)
-class GoodsGroupAdmin(admin.ModelAdmin):
+class DetailAdmin(admin.ModelAdmin):
     list_display = ['goods', 'producer', 'norms']
 
 
 @admin.register(GoodsCarousel)
-class GoodsGroupAdmin(admin.ModelAdmin):
+class GoodsCarouselAdmin(admin.ModelAdmin):
     list_display = ['name', 'is_status']
 
 
 @admin.register(Collect)
-class GoodsGroupAdmin(admin.ModelAdmin):
+class CollectAdmin(admin.ModelAdmin):
     list_display = ['user', 'goods']

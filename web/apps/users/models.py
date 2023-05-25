@@ -12,6 +12,7 @@ class Users(AbstractUser, BaseModel):
     class Meta:
         db_table = 'users'
         verbose_name = '用户表'
+        verbose_name_plural = verbose_name
 
 
 class Address(models.Model):
@@ -29,6 +30,7 @@ class Address(models.Model):
     class Meta:
         db_table = 'users_address'
         verbose_name = '收货地址表'
+        verbose_name_plural = verbose_name
 
 
 class Area(models.Model):
@@ -48,6 +50,7 @@ class Area(models.Model):
     class Meta:
         db_table = 'users_area'
         verbose_name = '地区表'
+        verbose_name_plural = verbose_name
 
 
 class AuthCode(models.Model):
@@ -63,3 +66,4 @@ class AuthCode(models.Model):
     class Meta:
         db_table = 'users_auth_code'
         verbose_name = '验证码表'
+        verbose_name_plural = verbose_name
