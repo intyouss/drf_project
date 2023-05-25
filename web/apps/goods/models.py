@@ -1,5 +1,7 @@
 from ckeditor.fields import RichTextField
 from django.db import models
+from django.db.models import Manager
+
 from common.default_model import BaseModel
 
 
@@ -15,6 +17,8 @@ class Goods(BaseModel):
     is_on = models.BooleanField(default=False, verbose_name='是否上架', blank=True)
     is_recommend = models.BooleanField(default=False, verbose_name='是否推荐', blank=True)
 
+    objects = Manager()
+
     class Meta:
         db_table = 'goods'
         verbose_name = '商品表'
@@ -29,6 +33,8 @@ class GoodsGroup(models.Model):
     name = models.CharField(max_length=20, verbose_name='名称')
     image = models.ImageField(max_length=20, verbose_name='分类图标', blank=True, null=True)
     is_status = models.BooleanField(verbose_name='是否启用', default=True)
+
+    objects = Manager()
 
     def __str__(self):
         return self.name
@@ -46,6 +52,8 @@ class Detail(BaseModel):
     norms = models.CharField(verbose_name='规格', max_length=200)
     details = RichTextField(blank=True, verbose_name='商品详情')
 
+    objects = Manager()
+
     class Meta:
         db_table = 'goods_detail'
         verbose_name = '商品详情表'
@@ -61,6 +69,7 @@ class GoodsCarousel(BaseModel):
     image = models.ImageField(verbose_name='轮播图', max_length=256, blank=True, null=True)
     is_status = models.BooleanField(verbose_name='是否启用', default=False, blank=True)
     seq = models.IntegerField(verbose_name='顺序', default=1, blank=True)
+    objects = Manager()
 
     def __str__(self):
         return self.name
@@ -75,6 +84,8 @@ class Collect(models.Model):
     """收藏商品表"""
     user = models.ForeignKey('users.Users', verbose_name='用户ID', blank=True, on_delete=models.CASCADE)
     goods = models.ForeignKey('Goods', verbose_name='商品ID', on_delete=models.CASCADE)
+
+    objects = Manager()
 
     class Meta:
         db_table = 'goods_collect'
