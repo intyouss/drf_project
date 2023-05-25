@@ -9,7 +9,7 @@ class Goods(BaseModel):
     name = models.CharField(verbose_name='商品名', max_length=200, default='')
     desc = models.CharField(verbose_name='商品描述', max_length=256)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='商品价格')
-    image = models.ImageField(verbose_name='封面图连接', blank=True, null=True)
+    image = models.ImageField(verbose_name='封面图', blank=True, null=True)
     stock = models.IntegerField(default=1, verbose_name='库存', blank=True)
     sales = models.IntegerField(default=0, verbose_name='销量', blank=True)
     is_on = models.BooleanField(default=False, verbose_name='是否上架', blank=True)
@@ -58,7 +58,7 @@ class Detail(BaseModel):
 class GoodsCarousel(BaseModel):
     """商品轮播图表"""
     name = models.CharField(verbose_name='轮播图名称', max_length=32, default='')
-    image = models.ImageField(verbose_name='轮播图链接', max_length=256, blank=True, null=True)
+    image = models.ImageField(verbose_name='轮播图', max_length=256, blank=True, null=True)
     is_status = models.BooleanField(verbose_name='是否启用', default=False, blank=True)
     seq = models.IntegerField(verbose_name='顺序', default=1, blank=True)
 
