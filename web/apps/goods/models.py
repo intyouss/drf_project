@@ -82,7 +82,7 @@ class GoodsCarousel(BaseModel):
 
 class Collect(models.Model):
     """收藏商品表"""
-    user = models.ForeignKey('users.Users', verbose_name='用户ID', blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey('users.Users', verbose_name='用户ID', on_delete=models.CASCADE, blank=True)
     goods = models.ForeignKey('Goods', verbose_name='商品ID', on_delete=models.CASCADE)
 
     objects = Manager()

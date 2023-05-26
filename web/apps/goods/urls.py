@@ -1,15 +1,25 @@
 from django.urls import path, include, re_path
-from .views import IndexView, GoodsView
+from .views import IndexView, GoodsView, CollectView
 
 urlpatterns = [
     # 商城首页接口
     path('index/', IndexView.as_view()),
     # 商品列表接口
-    path('goods/', GoodsView.as_view({
+    path('', GoodsView.as_view({
         'get': 'list'
     })),
     # 获取单个商品接口
-    path('goods/<int:pk>/', GoodsView.as_view({
+    path('<int:pk>/', GoodsView.as_view({
         'get': 'retrieve'
-    }))
+    })),
+    path('collect/', CollectView.as_view({
+        # 收藏商品
+        "post": 'create',
+        # 获取收藏商品
+        'get': 'list'
+    })),
+    # 取消收藏
+    path('collect/<int:pk>/', CollectView.as_view({
+        "delete": 'destroy'
+    })),
 ]
