@@ -15,4 +15,4 @@ class GoodsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Goods
-        fields = '__all__'
+        exclude = ('updated_time', 'created_time',)

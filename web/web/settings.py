@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'django_filters',
     # cors跨域
     'corsheaders',
+    # 富文本编辑器
+    'ckeditor',
     # app
     'users',
     'goods',

@@ -3,9 +3,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
-from .models import GoodsGroup, GoodsCarousel, Goods, Collect
+from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail
 from .permissions.collect import CollectPermission
 from .serializers.collect import CollectSerializer
+from .serializers.detail import DetailSerializer
 from .serializers.goods import GoodsSerializer
 from .serializers.goods_carousel import GoodsCarouselSerializer
 from .serializers.goods_group import GoodsGroupSerializer
@@ -16,11 +17,11 @@ class IndexView(APIView):
 
     def get(self, request):
         group = GoodsGroup.objects.filter(is_status=True)
-        groupSer = GoodsGroupSerializer(group, many=True)
+        groupSer = GoodsGroupSerializer(group, many=True, context={'request': request})
         carousel = GoodsCarousel.objects.filter(is_status=True)
-        carouselSer = GoodsCarouselSerializer(carousel, many=True)
+        carouselSer = GoodsCarouselSerializer(carousel, many=True, context={'request': request})
         goods = Goods.objects.filter(is_recommend=True)
-        goodsSer = GoodsSerializer(goods, many=True)
+        goodsSer = GoodsSerializer(goods, many=True, context={'request': request})
         result = {
             'group': groupSer.data,
             'carousel': carouselSer.data,
@@ -36,6 +37,15 @@ class GoodsView(ReadOnlyModelViewSet):
     filterset_fields = ('group', 'is_recommend')
     # 通过价格、销量排序、创建时间排序
     ordering_fields = ('sales', 'price', 'created_time')
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        detail = Detail.objects.get(goods=instance)
+        detail_json = DetailSerializer(detail)
+        result = serializer.data
+        result['detail'] = detail_json.data
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class CollectView(mixins.DestroyModelMixin, mixins.CreateModelMixin, GenericViewSet):

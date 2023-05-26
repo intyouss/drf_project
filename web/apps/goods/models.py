@@ -59,9 +59,6 @@ class Detail(BaseModel):
         verbose_name = '商品详情表'
         verbose_name_plural = verbose_name
 
-    def __str__(self):
-        return self.goods
-
 
 class GoodsCarousel(BaseModel):
     """商品轮播图表"""
