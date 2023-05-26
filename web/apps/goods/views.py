@@ -38,7 +38,7 @@ class GoodsView(ReadOnlyModelViewSet):
     ordering_fields = ('sales', 'price', 'created_time')
 
 
-class CollectView(mixins.ListModelMixin, mixins.DestroyModelMixin, mixins.CreateModelMixin, GenericViewSet):
+class CollectView(mixins.DestroyModelMixin, mixins.CreateModelMixin, GenericViewSet):
     """收藏商品视图"""
     queryset = Collect.objects.all()
     serializer_class = CollectSerializer
@@ -52,3 +52,8 @@ class CollectView(mixins.ListModelMixin, mixins.DestroyModelMixin, mixins.Create
             return super().create(request, *args, **kwargs)
         return Response({'error': '您没有权限执行此操作'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset()).filter(user=request.user)
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
