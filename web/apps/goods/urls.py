@@ -1,5 +1,5 @@
 from django.urls import path, include, re_path
-from .views import IndexView, GoodsView, CollectView
+from .views import IndexView, GoodsView, CollectView, GoodsGroupView
 
 urlpatterns = [
     # 商城首页接口
@@ -22,4 +22,7 @@ urlpatterns = [
     path('collect/<int:pk>/', CollectView.as_view({
         "delete": 'destroy'
     })),
+    path('group/', GoodsGroupView.as_view({
+        'get': 'list'
+    }))
 ]

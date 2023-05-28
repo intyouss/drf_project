@@ -67,3 +67,11 @@ class CollectView(mixins.DestroyModelMixin, mixins.CreateModelMixin, GenericView
         page = self.paginate_queryset(queryset)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class GoodsGroupView(mixins.ListModelMixin, GenericViewSet):
+    """商品分类视图"""
+    queryset = GoodsGroup.objects.filter(is_status=True)
+    serializer_class = GoodsGroupSerializer
+
+
