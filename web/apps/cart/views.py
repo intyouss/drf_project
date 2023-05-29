@@ -2,9 +2,11 @@ from django.shortcuts import render
 from rest_framework import mixins, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Cart
+from .permissions.cart import CartPermission
 from .serializers.cart import CartSerializer, ReadCartSerializer
 
 
@@ -16,7 +18,7 @@ class CartView(GenericViewSet, mixins.CreateModelMixin,
     """添加购物车商品视图"""
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, CartPermission]
 
     def get_serializer_class(self):
         """读写分离"""
@@ -41,3 +43,10 @@ class CartView(GenericViewSet, mixins.CreateModelMixin,
         queryset = self.get_queryset().filter(user=request.user)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    def update_goods_status(self, request, *args, **kwargs):
+        """修改商品的选中状态"""
+        obj = self.get_object()
+        obj.is_checked = not obj.is_checked
+        obj.save()
+        return Response({'message': '修改成功'}, status=status.HTTP_200_OK)

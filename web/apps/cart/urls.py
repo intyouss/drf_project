@@ -8,5 +8,9 @@ urlpatterns = [
     path('goods/', CartView.as_view({
         'post': 'create',
         'get': 'list'
+    })),
+    # 修改商品选中状态
+    path('goods/<int:pk>/checked/', CartView.as_view({
+        'put': 'update_goods_status'
     }))
 ]
