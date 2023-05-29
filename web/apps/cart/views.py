@@ -50,3 +50,20 @@ class CartView(GenericViewSet, mixins.CreateModelMixin,
         obj.is_checked = not obj.is_checked
         obj.save()
         return Response({'message': '修改成功'}, status=status.HTTP_200_OK)
+
+    def update_goods_number(self, request, *args, **kwarg):
+        """修改商品数量"""
+        number = request.data.get('number')
+        if not isinstance(number, int):
+            return Response({'error': '参数不能为空！'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        obj = self.get_object()
+        stock = obj.goods.stock
+        if number <= 0:
+            obj.delete()
+        elif number > obj.goods.stock:
+            obj.number = stock
+            obj.save()
+        else:
+            obj.number = number
+            obj.save()
+        return Response({'message': '修改成功'}, status=status.HTTP_200_OK)
