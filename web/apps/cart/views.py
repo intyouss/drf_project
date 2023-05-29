@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Cart
-from .serializers.cart import CartSerializer
+from .serializers.cart import CartSerializer, ReadCartSerializer
 
 
 class CartView(GenericViewSet, mixins.CreateModelMixin,
@@ -18,10 +18,17 @@ class CartView(GenericViewSet, mixins.CreateModelMixin,
     serializer_class = CartSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self):
+        """读写分离"""
+        if self.action == 'list':
+            return ReadCartSerializer
+        else:
+            return self.serializer_class
+
     def create(self, request, *args, **kwargs):
         user = request.user
         goods = request.data.get('goods')
-        if Cart.objects.filter(user=user, goods=goods).exist():
+        if Cart.objects.filter(user=user, goods=goods).exists():
             cart_goods = Cart.objects.get(user=user, goods=goods)
             cart_goods.number += 1
             cart_goods.save()
@@ -29,3 +36,8 @@ class CartView(GenericViewSet, mixins.CreateModelMixin,
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         request.data['user'] = user.id
         return super().create(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(user=request.user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

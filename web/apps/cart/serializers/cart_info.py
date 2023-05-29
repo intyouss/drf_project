@@ -8,7 +8,7 @@
 from rest_framework import serializers
 
 from ..models import Cart
-from apps.goods.serializers.goods import GoodsSerializer
+from goods.serializers.goods import GoodsSerializer
 
 
 class CartInfoSerializer(serializers.ModelSerializer):
