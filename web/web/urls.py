@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/users/', include('users.urls')),
     re_path(r'/file/image/(.+?)/', FileView.as_view()),
     path('api/goods/', include('goods.urls')),
-    path('api/cart/', include('cart.urls'))
+    path('api/cart/', include('cart.urls')),
+    path('api/order/', include('order.urls'))
 ]

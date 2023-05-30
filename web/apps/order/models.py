@@ -50,7 +50,7 @@ class OrderGoods(BaseModel):
         verbose_name_plural = verbose_name
 
 
-class OrderCommit(BaseModel):
+class OrderComment(BaseModel):
     """订单商品评论表"""
     LEVEL = (
         (1, '好评'),
@@ -75,6 +75,6 @@ class OrderCommit(BaseModel):
     objects = Manager()
 
     class Meta:
-        db_table = 'order_commit'
+        db_table = 'order_comment'
         verbose_name = '订单商品评论表'
         verbose_name_plural = verbose_name

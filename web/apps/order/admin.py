@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderGoods, OrderCommit
+from .models import Order, OrderGoods, OrderComment
 
 
 @admin.register(Order)
@@ -13,6 +13,6 @@ class OrderGoodsAdmin(admin.ModelAdmin):
     list_display = ['order', 'goods', 'price', 'number']
 
 
-@admin.register(OrderCommit)
-class OrderCommitAdmin(admin.ModelAdmin):
+@admin.register(OrderComment)
+class OrderCommentAdmin(admin.ModelAdmin):
     list_display = ['user', 'goods', 'order', 'content', 'star', 'rate']
