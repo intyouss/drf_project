@@ -3,9 +3,8 @@ import time
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
-
+from django.db import transaction
 from .models import Order, OrderGoods
 from .permissions.order import OrderPermission
 from .serializers.order import OrderSerializer
@@ -19,6 +18,7 @@ class OrderView(GenericViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, OrderPermission]
 
+    @transaction.atomic  # 添加事务
     def create(self, request, *arg, **kwargs):
         address = request.data.get('address')
         if not Address.objects.filter(user=request.user, id=address).exists():
@@ -36,19 +36,29 @@ class OrderView(GenericViewSet):
         if not cart_goods.exists():
             return Response({'error': '订单提交失败，未选中商品'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         order_number = str(int(time.time())) + str(request.user)
-        order = Order.objects.create(user=request.user, address=address_str, order_number=order_number, amount=0)
-        amount = 0
-        for cart in cart_goods:
-            number = cart.number
-            amount += cart.goods.price * number
-            if cart.goods.stock > number:
-                cart.goods.stock -= number
-                cart.goods.sales += number
-                cart.goods.save()
-            else:
-                return Response({'error': f'{cart.goods.name}库存不足'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-            OrderGoods.objects.create(
-                order=order, goods=cart.goods, number=cart.number, price=cart.goods.price)
-        order.amount = amount
-        order.save()
-        return Response({'message': address_str, 'amount': amount}, status=status.HTTP_201_CREATED)
+        save_id = transaction.savepoint()  # 创建保存节点
+        try:
+            order = Order.objects.create(user=request.user, address=address_str, order_number=order_number, amount=0)
+            amount = 0
+            for cart in cart_goods:
+                number = cart.number
+                amount += cart.goods.price * number
+                if cart.goods.stock >= number:
+                    cart.goods.stock -= number
+                    cart.goods.sales += number
+                    cart.goods.save()
+                else:
+                    transaction.savepoint_rollback(save_id)
+                    return Response({'error': f'{cart.goods.name}库存不足'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                OrderGoods.objects.create(
+                    order=order, goods=cart.goods, number=cart.number, price=cart.goods.price)
+                cart.delete()
+            order.amount = amount
+            order.save()
+        except Exception:
+            transaction.savepoint_rollback(save_id)
+            return Response({'error': '服务端异常，订单创建失败'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            transaction.savepoint_commit(save_id)
+            ser = self.get_serializer(order)
+        return Response(ser.data, status=status.HTTP_201_CREATED)
