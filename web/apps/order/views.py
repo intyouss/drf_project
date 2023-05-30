@@ -39,7 +39,14 @@ class OrderView(GenericViewSet):
         order = Order.objects.create(user=request.user, address=address_str, order_number=order_number, amount=0)
         amount = 0
         for cart in cart_goods:
-            amount += cart.goods.price * cart.number
+            number = cart.number
+            amount += cart.goods.price * number
+            if cart.goods.stock > number:
+                cart.goods.stock -= number
+                cart.goods.sales += number
+                cart.goods.save()
+            else:
+                return Response({'error': f'{cart.goods.name}库存不足'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
             OrderGoods.objects.create(
                 order=order, goods=cart.goods, number=cart.number, price=cart.goods.price)
         order.amount = amount
