@@ -1,5 +1,9 @@
 from django.urls import path, include, re_path
 
-urlpatterns = [
+from .views import OrderView
 
+urlpatterns = [
+    path('submit/', OrderView.as_view({
+        'post': 'create'
+    }))
 ]
