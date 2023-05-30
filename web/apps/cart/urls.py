@@ -15,5 +15,8 @@ urlpatterns = [
     })),
     path('goods/<int:pk>/number/', CartView.as_view({
         'put': 'update_goods_number'
+    })),
+    path('goods/<int:pk>/delete/', CartView.as_view({
+        'delete': 'destroy'
     }))
 ]
