@@ -66,7 +66,7 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         else:
             transaction.savepoint_commit(save_id)
             ser = self.get_serializer(order)
-        return Response(ser.data, status=status.HTTP_201_CREATED)
+            return Response(ser.data, status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset()).filter(user=request.user)
@@ -102,6 +102,7 @@ class OrderCommentView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModel
     permission_classes = [IsAuthenticated, OrderCommentPermission]
     filterset_fields = ['goods', 'order']
 
+    @transaction.atomic
     def create(self, request, *args, **kwargs):
         order = request.data.get('order')
         if not order:
@@ -113,7 +114,27 @@ class OrderCommentView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModel
             return Response({'error': '不存在未评价订单'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         if order_obj.user != request.user:
             return Response({'error': '你不能评价此订单'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        request.data['user'] = request.user.id
-        order_obj.status = 5
-        order_obj.save()
-        return super().create(request, *args, **kwargs)
+        comment = request.data.get('comment')
+        if not isinstance(comment, list):
+            return Response({'error': '订单评价参数格式有误'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        save_id = transaction.savepoint()
+        try:
+            for item in comment:
+                if not isinstance(item, dict):
+                    return Response({'error': '订单评价参数格式有误'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                goods = item.get('goods', None)
+                if not OrderGoods.objects.filter(order=order_obj, goods__id=goods).exists():
+                    return Response({'error': '订单中没有该商品'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                item['user'] = request.user.id
+                item['goods'] = goods
+                ser = OrderCommentSerializer(data=item)
+                ser.is_valid()
+                ser.save()
+            order_obj.status = 5
+            order_obj.save()
+        except Exception:
+            transaction.savepoint_rollback(save_id)
+            return Response({'error': '评价失败'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            transaction.savepoint_commit(save_id)
+            return Response({'message': '评论成功'}, status=status.HTTP_201_CREATED)
