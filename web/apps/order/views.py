@@ -5,13 +5,15 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from django.db import transaction
-from .models import Order, OrderGoods
+from .models import Order, OrderGoods, OrderComment
 from .permissions.order import OrderPermission
+from .permissions.order_comment import OrderCommentPermission
 from .serializers.order import OrderSerializer
 from users.models import Address
 
 from cart.models import Cart
 
+from .serializers.order_comment import OrderCommentSerializer
 from .serializers.order_goods import OrderGoodsSerializer
 
 
@@ -91,3 +93,26 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         obj.status = 6
         obj.save()
         return Response({'message': '订单已关闭'}, status=status.HTTP_200_OK)
+
+
+class OrderCommentView(GenericViewSet, mixins.CreateModelMixin):
+    """商品评价视图"""
+    queryset = OrderComment.objects.all()
+    serializer_class = OrderCommentSerializer
+    permission_classes = [IsAuthenticated, OrderCommentPermission]
+
+    def create(self, request, *args, **kwargs):
+        order = request.data.get('order')
+        if not order:
+            return Response({'error': '订单ID错误'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if not Order.objects.filter(id=order).exists():
+            return Response({'error': '订单不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        order_obj = Order.objects.get(id=order)
+        if order_obj.status != 4:
+            return Response({'error': '不存在未评价订单'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if order_obj.user != request.user:
+            return Response({'error': '你不能评价此订单'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        request.data['user'] = request.user.id
+        order_obj.status = 5
+        order_obj.save()
+        return super().create(request, *args, **kwargs)
