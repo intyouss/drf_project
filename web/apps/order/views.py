@@ -1,6 +1,6 @@
 import time
 
-from rest_framework import status
+from rest_framework import status, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -13,10 +13,11 @@ from users.models import Address
 from cart.models import Cart
 
 
-class OrderView(GenericViewSet):
+class OrderView(GenericViewSet, mixins.ListModelMixin):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, OrderPermission]
+    filterset_fields = ['status']  # 可以实现通过参数查询功能
 
     @transaction.atomic  # 添加事务
     def create(self, request, *arg, **kwargs):
@@ -62,3 +63,8 @@ class OrderView(GenericViewSet):
             transaction.savepoint_commit(save_id)
             ser = self.get_serializer(order)
         return Response(ser.data, status=status.HTTP_201_CREATED)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset()).filter(user=request.user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
