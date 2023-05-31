@@ -72,6 +72,7 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
+        """获取订单详情"""
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         goods = OrderGoods.objects.filter(order=instance)
@@ -79,3 +80,14 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         result = serializer.data
         result['goods_list'] = order_goods.data
         return Response(result)
+
+    def close_order(self, request, *args, **kwargs):
+        """关闭订单"""
+        obj = self.get_object()
+        if obj.status != 1:
+            return Response(
+                {'error': '订单无法取消'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY
+            )
+        obj.status = 6
+        obj.save()
+        return Response({'message': '订单已关闭'}, status=status.HTTP_200_OK)

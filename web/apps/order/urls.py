@@ -11,5 +11,8 @@ urlpatterns = [
     })),
     path('<int:pk>/', OrderView.as_view({
         'get': 'retrieve'
+    })),
+    path('<int:pk>/close/', OrderView.as_view({
+        'put': 'close_order'
     }))
 ]
