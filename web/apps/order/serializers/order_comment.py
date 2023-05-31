@@ -11,7 +11,7 @@ from ..models import Order, OrderComment
 
 
 class OrderCommentSerializer(serializers.ModelSerializer):
-    """商品轮播图序列化器"""
+    """订单评论序列化器"""
 
     class Meta:
         model = OrderComment

@@ -8,11 +8,13 @@
 from rest_framework import serializers
 
 from ..models import Order, OrderGoods
+from goods.serializers.goods import GoodsSerializer
 
 
 class OrderGoodsSerializer(serializers.ModelSerializer):
-    """商品轮播图序列化器"""
+    """订单商品序列化器"""
+    goods = GoodsSerializer()
 
     class Meta:
         model = OrderGoods
-        fields = '__all__'
+        fields = ('goods', 'number', 'price')

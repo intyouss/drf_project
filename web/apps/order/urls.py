@@ -8,5 +8,8 @@ urlpatterns = [
     })),
     path('', OrderView.as_view({
         'get': 'list'
+    })),
+    path('<int:pk>/', OrderView.as_view({
+        'get': 'retrieve'
     }))
 ]

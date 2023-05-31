@@ -11,7 +11,7 @@ from ..models import Order
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    """商品轮播图序列化器"""
+    """订单序列化器"""
 
     class Meta:
         model = Order

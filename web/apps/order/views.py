@@ -12,6 +12,8 @@ from users.models import Address
 
 from cart.models import Cart
 
+from .serializers.order_goods import OrderGoodsSerializer
+
 
 class OrderView(GenericViewSet, mixins.ListModelMixin):
     queryset = Order.objects.all()
@@ -68,3 +70,12 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         queryset = self.filter_queryset(self.get_queryset()).filter(user=request.user)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        goods = OrderGoods.objects.filter(order=instance)
+        order_goods = OrderGoodsSerializer(goods, many=True)
+        result = serializer.data
+        result['goods_list'] = order_goods.data
+        return Response(result)
