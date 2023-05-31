@@ -212,6 +212,12 @@ ACCESS_KEY_ID = ''  # 您的 AccessKey ID
 ACCESS_KEY_SECRET = 'r'  # AccessKey Secret
 ENDPOINT = ''
 
+# 支付宝Alipay
+ALIPAY_GATEWAY = ''
+APP_ID = ''
+APP_NAME = ''
+APP_PID = ''
+
 
 try:
     from .local_settings import *
