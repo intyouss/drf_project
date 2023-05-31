@@ -16,6 +16,7 @@ urlpatterns = [
         'put': 'close_order'
     })),
     path('comment/', OrderCommentView.as_view({
-        'post': 'create'
+        'post': 'create',
+        'get': 'list'
     }))
 ]

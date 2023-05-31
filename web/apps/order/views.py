@@ -95,11 +95,12 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         return Response({'message': '订单已关闭'}, status=status.HTTP_200_OK)
 
 
-class OrderCommentView(GenericViewSet, mixins.CreateModelMixin):
+class OrderCommentView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin):
     """商品评价视图"""
     queryset = OrderComment.objects.all()
     serializer_class = OrderCommentSerializer
     permission_classes = [IsAuthenticated, OrderCommentPermission]
+    filterset_fields = ['goods', 'order']
 
     def create(self, request, *args, **kwargs):
         order = request.data.get('order')
