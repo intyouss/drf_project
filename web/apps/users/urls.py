@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import LoginView, RegisterView, UserView, AddressView, SendSMSView
+from .views import LoginView, RegisterView, UserView, AddressView, SendSMSView, AreaView
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 urlpatterns = [
@@ -44,5 +44,9 @@ urlpatterns = [
     })),
     path('<int:pk>/password/update', UserView.as_view({
         'put': 'update_password'
+    })),
+    # 查询省市区县数据
+    path('area/', AreaView.as_view({
+        'get': 'list'
     }))
 ]

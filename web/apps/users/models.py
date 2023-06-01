@@ -47,6 +47,8 @@ class Area(models.Model):
     name = models.CharField(max_length=32, verbose_name='地区名')
     level = models.IntegerField(choices=level_choice, verbose_name='区域等级')
 
+    objects = Manager()
+
     class Meta:
         db_table = 'users_area'
         verbose_name = '地区表'

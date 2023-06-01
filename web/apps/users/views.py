@@ -12,10 +12,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from common.SMS import AliYunSMS
-from .models import Users, Address, AuthCode
+from .models import Users, Address, AuthCode, Area
 from .permissions.Address import AddressPermission
 from .permissions.users import UserPermission
 from .serializers.address import AddressSerializer
+from .serializers.area import AreaSerializer
 from .serializers.users import UserSerializer
 from django.conf import settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
@@ -239,5 +240,11 @@ class SendSMSView(APIView):
     def get_random_code():
         return ''.join(random.sample('0123456789', 6))
 
+
+class AreaView(GenericViewSet, mixins.ListModelMixin):
+    """省市区县数据查询视图"""
+    queryset = Area.objects.all()
+    serializer_class = AreaSerializer
+    filterset_fields = ('level',)
 
 
