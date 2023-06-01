@@ -56,7 +56,7 @@ class CartView(GenericViewSet, mixins.CreateModelMixin,
         stock = obj.goods.stock
         if number <= 0:
             obj.delete()
-        elif number > obj.goods.stock:
+        elif number > stock:
             obj.number = stock
             obj.save()
         else:

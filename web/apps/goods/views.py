@@ -42,10 +42,9 @@ class GoodsView(ReadOnlyModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        detail = Detail.objects.get(goods=instance)
-        detail_json = DetailSerializer(detail)
+        detail = instance.detail
         result = serializer.data
-        result['detail'] = detail_json.data
+        result['detail'] = DetailSerializer(detail).data
         return Response(result, status=status.HTTP_200_OK)
 
 

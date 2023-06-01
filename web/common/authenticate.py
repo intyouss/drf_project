@@ -19,7 +19,7 @@ class MyBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             user = Users.objects.get(Q(username=username) | Q(mobile=username) | Q(email=username))
-        except Exception:
+        except Users.DoseNotExist:
             raise serializers.ValidationError({'error': '未找到用户'})
         else:
             if user.check_password(password):

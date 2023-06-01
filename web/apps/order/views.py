@@ -90,7 +90,7 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         obj = self.get_object()
         if obj.status != 1:
             return Response(
-                {'error': '订单无法取消'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY
+                {'error': '订单状态错误'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY
             )
         obj.status = 6
         obj.save()
