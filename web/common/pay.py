@@ -6,8 +6,10 @@
 # @Email    : intyou@outlook.com
 # @GitHub   : https://github.com/intyouss
 import os
+
 from alipay import AliPay
 from django.conf import settings
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
 
 

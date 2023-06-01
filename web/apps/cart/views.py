@@ -1,8 +1,6 @@
-from django.shortcuts import render
 from rest_framework import mixins, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Cart
@@ -11,10 +9,8 @@ from .serializers.cart import CartSerializer, ReadCartSerializer
 
 
 class CartView(GenericViewSet, mixins.CreateModelMixin,
-               mixins.RetrieveModelMixin,
-               mixins.UpdateModelMixin,
-               mixins.DestroyModelMixin,
-               mixins.ListModelMixin):
+               mixins.UpdateModelMixin, mixins.DestroyModelMixin
+               ):
     """添加购物车商品视图"""
     queryset = Cart.objects.all()
     serializer_class = CartSerializer

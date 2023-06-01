@@ -1,10 +1,12 @@
-import os
 import json
-from alibabacloud_tea_openapi.models import Config
+import os
+
 from alibabacloud_dysmsapi20170525.client import Client
 from alibabacloud_dysmsapi20170525.models import SendSmsRequest
+from alibabacloud_tea_openapi.models import Config
 from alibabacloud_tea_util.models import RuntimeOptions
 from django.conf import settings
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
 
 

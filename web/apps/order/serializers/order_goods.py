@@ -5,10 +5,10 @@
 # @File     : cart.py
 # @Email    : intyou@outlook.com
 # @GitHub   : https://github.com/intyouss
+from goods.serializers.goods import GoodsSerializer
 from rest_framework import serializers
 
-from ..models import Order, OrderGoods
-from goods.serializers.goods import GoodsSerializer
+from ..models import OrderGoods
 
 
 class OrderGoodsSerializer(serializers.ModelSerializer):

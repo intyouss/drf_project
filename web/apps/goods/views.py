@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
+
 from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail
 from .permissions.collect import CollectPermission
 from .serializers.collect import CollectSerializer

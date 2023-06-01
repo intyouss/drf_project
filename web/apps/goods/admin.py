@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import GoodsGroup, Goods, GoodsCarousel, Detail, Collect
 
 

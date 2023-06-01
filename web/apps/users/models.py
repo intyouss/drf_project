@@ -1,8 +1,8 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Manager
 
 from common.default_model import BaseModel
-from django.contrib.auth.models import AbstractUser
 
 
 class Users(AbstractUser, BaseModel):

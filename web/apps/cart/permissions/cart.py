@@ -10,6 +10,7 @@ from rest_framework import permissions
 
 class CartPermission(permissions.BasePermission):
     """购物车权限限制"""
+
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True

@@ -7,7 +7,7 @@
 # @GitHub   : https://github.com/intyouss
 from rest_framework import serializers
 
-from ..models import Order, OrderComment
+from ..models import OrderComment
 
 
 class OrderCommentSerializer(serializers.ModelSerializer):

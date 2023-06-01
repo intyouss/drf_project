@@ -8,8 +8,8 @@
 
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
-from users.models import Users
 from rest_framework import serializers
+from users.models import Users
 
 
 class MyBackend(ModelBackend):

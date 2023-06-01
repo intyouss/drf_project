@@ -1,7 +1,6 @@
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.db.models import Manager
-
 from common.default_model import BaseModel
 
 
