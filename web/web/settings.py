@@ -220,6 +220,28 @@ PUBLIC_KEY = BASE_DIR / 'common/keys/alipay_public_key.pem'
 PRIVATE_KEY = BASE_DIR / 'common/keys/alipay_private_key.pem'
 
 
+# redis 缓存
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': '123456'  # 自己配置
+        }
+    },
+    'session': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': "123456"
+        }
+    }
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'session'
+
 try:
     from .local_settings import *
 except ImportError:
