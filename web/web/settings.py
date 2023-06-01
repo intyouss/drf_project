@@ -20,7 +20,6 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -217,6 +216,9 @@ ALIPAY_GATEWAY = ''
 APP_ID = ''
 APP_NAME = ''
 APP_PID = ''
+# 请先在COMMON/KEY文件夹中放入PEM文件
+PUBLIC_KEY = BASE_DIR / 'common/key/alipay_public_key.pem'
+PRIVATE_KEY = BASE_DIR / 'common/key/alipay_private_key.pem'
 
 
 try:

@@ -3,8 +3,11 @@ import time
 from rest_framework import status, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from django.db import transaction
+
+from common.pay import ALiPay
 from .models import Order, OrderGoods, OrderComment
 from .permissions.order import OrderPermission
 from .permissions.order_comment import OrderCommentPermission
@@ -138,3 +141,19 @@ class OrderCommentView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModel
         else:
             transaction.savepoint_commit(save_id)
             return Response({'message': '评论成功'}, status=status.HTTP_201_CREATED)
+
+
+class OrderPayView(APIView):
+    """订单支付接口"""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        order_id = request.data.get('orderID')
+        if not Order.objects.filter(id=order_id, user=request.user).exists():
+            return Response({'error': '订单不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        order = Order.objects.get(id=order_id)
+        amount = order.amount
+        order_number = order.order_number
+        title = '订单支付'
+        pay_url = ALiPay().mobile_payment_url(order_number, amount, title)
+        return Response({'pay_url': pay_url}, status=status.HTTP_200_OK)
