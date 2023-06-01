@@ -11,7 +11,7 @@ from ..models import Detail
 
 
 class DetailSerializer(serializers.ModelSerializer):
-    """商品轮播图序列化器"""
+    """商品详情序列化器"""
 
     class Meta:
         model = Detail

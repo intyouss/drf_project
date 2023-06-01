@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class Users(AbstractUser, BaseModel):
+    """用户表"""
     mobile = models.CharField(max_length=11, default='', verbose_name='手机号码')
     avatar = models.ImageField(verbose_name='用户头像', blank=True, null=True)
 
@@ -16,6 +17,7 @@ class Users(AbstractUser, BaseModel):
 
 
 class Address(models.Model):
+    """收货地址表"""
     user = models.ForeignKey('Users', verbose_name='用户名', on_delete=models.CASCADE)
     phone = models.CharField(verbose_name='手机号码', max_length=11)
     name = models.CharField(verbose_name='联系人', max_length=20)

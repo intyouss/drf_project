@@ -34,5 +34,5 @@ class AliYunSMS:
                 return {'code': 'YES', 'message': "短信发送成功"}
             else:
                 return {'code': 'NO', 'error': res.body.message}
-        except Exception as e:
+        except Exception:
             return {'code': 'NO', 'error': '短信发送失败'}

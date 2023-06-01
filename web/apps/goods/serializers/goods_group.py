@@ -11,7 +11,7 @@ from ..models import GoodsGroup
 
 
 class GoodsGroupSerializer(serializers.ModelSerializer):
-    """商品轮播图序列化器"""
+    """商品分类序列化器"""
 
     class Meta:
         model = GoodsGroup

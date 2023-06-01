@@ -22,6 +22,7 @@ urlpatterns = [
     path('collect/<int:pk>/', CollectView.as_view({
         "delete": 'destroy'
     })),
+    # 获取商品分类
     path('group/', GoodsGroupView.as_view({
         'get': 'list'
     }))

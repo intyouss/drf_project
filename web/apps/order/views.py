@@ -21,6 +21,7 @@ from .serializers.order_goods import OrderGoodsSerializer
 
 
 class OrderView(GenericViewSet, mixins.ListModelMixin):
+    """订单视图"""
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, OrderPermission]
@@ -99,7 +100,7 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
 
 
 class OrderCommentView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin):
-    """商品评价视图"""
+    """订单商品评价视图"""
     queryset = OrderComment.objects.all()
     serializer_class = OrderCommentSerializer
     permission_classes = [IsAuthenticated, OrderCommentPermission]

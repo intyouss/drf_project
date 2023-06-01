@@ -11,7 +11,7 @@ from ..models import Collect
 
 
 class CollectSerializer(serializers.ModelSerializer):
-    """商品轮播图序列化器"""
+    """收藏商品序列化器"""
 
     class Meta:
         model = Collect

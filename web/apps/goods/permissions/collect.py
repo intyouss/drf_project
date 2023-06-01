@@ -9,7 +9,7 @@ from rest_framework import permissions
 
 
 class CollectPermission(permissions.BasePermission):
-
+    """收藏商品权限限制"""
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True

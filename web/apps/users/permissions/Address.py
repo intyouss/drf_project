@@ -9,7 +9,7 @@ from rest_framework import permissions
 
 
 class AddressPermission(permissions.BasePermission):
-
+    """收货地址权限限制"""
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True
