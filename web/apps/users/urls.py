@@ -25,29 +25,29 @@ urlpatterns = [
         'put': 'update'
     })),
     # 设置默认地址
-    path('address/<int:pk>/default', AddressView.as_view({
+    path('address/<int:pk>/default/', AddressView.as_view({
         'put': 'set_default_address'
     })),
     # 发送短信验证码
     path('sms/send/', SendSMSView.as_view()),
     # 绑定手机号
-    path('<int:pk>/mobile/bind', UserView.as_view({
+    path('<int:pk>/mobile/bind/', UserView.as_view({
         'put': 'bind_mobile'
     })),
     # 解绑手机号
-    path('<int:pk>/mobile/unbind', UserView.as_view({
+    path('<int:pk>/mobile/unbind/', UserView.as_view({
         'put': 'unbind_mobile'
     })),
     # 修改昵称
-    path('<int:pk>/nickname/update', UserView.as_view({
+    path('<int:pk>/nickname/update/', UserView.as_view({
         'put': 'update_nickname'
     })),
     # 修改邮箱
-    path('<int:pk>/email/update', UserView.as_view({
+    path('<int:pk>/email/update/', UserView.as_view({
         'put': 'update_email'
     })),
     # 修改密码
-    path('<int:pk>/password/update', UserView.as_view({
+    path('<int:pk>/password/update/', UserView.as_view({
         'put': 'update_password'
     })),
     # 查询省市区县数据
