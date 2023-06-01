@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY WARNING: keep the secret keys used in production secret!
 SECRET_KEY = 'django-insecure-aiffd=ja+v4js-xq-rczj=j#ojd1b=@n9&t9ce!=1t1ccr-bru'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -140,7 +140,7 @@ USE_TZ = False
 
 STATIC_URL = 'static/'
 
-# Default primary key field type
+# Default primary keys field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -217,8 +217,8 @@ APP_ID = ''
 APP_NAME = ''
 APP_PID = ''
 # 请先在COMMON/KEY文件夹中放入PEM文件
-PUBLIC_KEY = BASE_DIR / 'common/key/alipay_public_key.pem'
-PRIVATE_KEY = BASE_DIR / 'common/key/alipay_private_key.pem'
+PUBLIC_KEY = BASE_DIR / 'common/keys/alipay_public_key.pem'
+PRIVATE_KEY = BASE_DIR / 'common/keys/alipay_private_key.pem'
 
 
 try:
