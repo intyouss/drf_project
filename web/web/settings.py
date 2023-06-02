@@ -278,7 +278,7 @@ LOGGING = {
         'file': {  # 向文件中输出日志
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, f'logs/{time.strftime("%Y-%m-%d-%H%M", time.localtime())}.log'),
+            'filename': os.path.join(BASE_DIR, f'logs/{time.strftime("%Y-%m-%d", time.localtime())}.log'),
             'maxBytes': 300 * 1024 * 1024,
             'backupCount': 10,
             'formatter': 'verbose'

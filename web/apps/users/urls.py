@@ -11,9 +11,9 @@ urlpatterns = [
     # 校验Token
     path('token/verify/', TokenVerifyView.as_view()),
     # 获取单个用户信息路由
-    path('users/<int:pk>/', UserView.as_view({'get': 'retrieve'})),
+    path('<int:pk>/', UserView.as_view({'get': 'retrieve'})),
     # 上传头像路由
-    path('users/<int:pk>/avatar/upload/', UserView.as_view({'post': 'upload_avatar'})),
+    path('<int:pk>/avatar/upload/', UserView.as_view({'post': 'upload_avatar'})),
     # 添加地址和获取地址列表的路由
     path('address/', AddressView.as_view({
         'post': "create",

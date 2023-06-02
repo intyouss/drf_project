@@ -16,7 +16,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from common.SMS import AliYunSMS
 from .models import Users, Address, Area
-from .permissions.Address import AddressPermission
+from .permissions.address import AddressPermission
 from .permissions.users import UserPermission
 from .serializers.address import AddressSerializer
 from .serializers.area import AreaSerializer
