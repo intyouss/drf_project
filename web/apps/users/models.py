@@ -55,19 +55,3 @@ class Area(models.Model):
         db_table = 'users_area'
         verbose_name = '地区表'
         verbose_name_plural = verbose_name
-
-
-class AuthCode(models.Model):
-    """
-    验证码模型
-    """
-    mobile = models.CharField(verbose_name='手机号', max_length=11)
-    code = models.CharField(max_length=6, verbose_name='验证码')
-    created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
-
-    objects = Manager()
-
-    class Meta:
-        db_table = 'users_auth_code'
-        verbose_name = '验证码表'
-        verbose_name_plural = verbose_name

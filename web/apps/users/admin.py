@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Users, Address, Area, AuthCode
+from .models import Users, Address, Area
 
 
 @admin.register(Users)
@@ -16,8 +16,3 @@ class AddressAdmin(admin.ModelAdmin):
 @admin.register(Area)
 class AreaAdmin(admin.ModelAdmin):
     list_display = ['pid', 'name', 'level']
-
-
-@admin.register(AuthCode)
-class AuthCodeAdmin(admin.ModelAdmin):
-    list_display = ['mobile', 'code', 'created_time']

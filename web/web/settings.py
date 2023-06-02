@@ -225,10 +225,10 @@ PRIVATE_KEY = BASE_DIR / 'common/keys/alipay_private_key.pem'
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': 'redis://127.0.0.1:6379/0',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'PASSWORD': '123456'  # 自己配置
+            'CONNECTION_POOL_KWARGS': {'max_connections': 100, 'decode_responses': True},
         }
     },
     'session': {
@@ -236,9 +236,17 @@ CACHES = {
         'LOCATION': 'redis://127.0.0.1:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'PASSWORD': "123456"
+            'CONNECTION_POOL_KWARGS': {'max_connections': 100, 'decode_responses': True},
         }
-    }
+    },
+    'code': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/2',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'CONNECTION_POOL_KWARGS': {'max_connections': 100, 'decode_responses': True},
+        },
+    },
 }
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'session'

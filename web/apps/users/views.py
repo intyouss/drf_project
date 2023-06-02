@@ -1,10 +1,10 @@
 import os
 import random
 import re
-from datetime import datetime
 
 from django.conf import settings
 from django.http import FileResponse
+from django_redis import get_redis_connection
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -15,7 +15,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from common.SMS import AliYunSMS
-from .models import Users, Address, AuthCode, Area
+from .models import Users, Address, Area
 from .permissions.Address import AddressPermission
 from .permissions.users import UserPermission
 from .serializers.address import AddressSerializer
@@ -94,29 +94,26 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         return Response({'url': serializer.data['avatar']}, status=status.HTTP_200_OK)
 
     @staticmethod
-    def verify_auth_code(code, code_id, mobile):
+    def verify_auth_code(code, mobile):
         """验证短信验证码"""
         if not code:
             return {'error': '验证码不能为空'}
-        if not code_id:
-            return {'error': '验证码ID不能为空'}
         if not mobile:
             return {'error': '手机号不能为空'}
-        obj = AuthCode.objects.filter(id=code_id, code=code, mobile=mobile)
-        if obj:
-            time = (datetime.now().astimezone() - obj.created_time.astimezone()).seconds
-            obj.delete()
-            if time > 180:
-                return {'error': '验证码已过期, 请重新获取'}
-        else:
+        redis_cli = get_redis_connection('code')
+        result = redis_cli.get(mobile)
+        if not result:
+            return {'error': '验证码已过期, 请重新获取'}
+        elif result != code:
             return {'error': '验证码错误'}
+        else:
+            redis_cli.delete(mobile)
 
     def bind_mobile(self, request, *args, **kwargs):
         """绑定手机号"""
         code = request.data.get('code')
-        codeID = request.data.get('codeID')
         mobile = request.data.get('mobile')
-        if result := self.verify_auth_code(code, codeID, mobile):
+        if result := self.verify_auth_code(code, mobile):
             return Response(result, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         if Users.objects.filter(mobile=mobile).exists():
             return Response({'error': '手机号已被用户绑定'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
@@ -128,9 +125,8 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
     def unbind_mobile(self, request, *args, **kwargs):
         """解绑手机号"""
         code = request.data.get('code')
-        codeID = request.data.get('codeID')
         mobile = request.data.get('mobile')
-        if result := self.verify_auth_code(code, codeID, mobile):
+        if result := self.verify_auth_code(code, mobile):
             return Response(result, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         user = request.user
         if user.mobile != mobile:
@@ -168,14 +164,13 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
     def update_password(self, request, *args, **kwargs):
         """修改密码"""
         code = request.data.get('code')
-        codeID = request.data.get('codeID')
         mobile = request.data.get('mobile')
         password = request.data.get('password')
         password_confirmation = request.data.get('password_confirmation')
         user = self.get_object()
         if user.mobile != mobile:
             return Response({'error': '此手机号不是该用户绑定号码'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        if result := self.verify_auth_code(code, codeID, mobile):
+        if result := self.verify_auth_code(code, mobile):
             return Response(result, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         if not password or not password_confirmation:
             return Response({'error': "参数不能为空"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
@@ -233,8 +228,8 @@ class SendSMSView(APIView):
         code = self.get_random_code()
         result = AliYunSMS(mobile=mobile, sms_code=code).send_msg()
         if result['code'] == 'YES':
-            obj = AuthCode.objects.create(mobile=mobile, code=code)
-            result['codeID'] = obj.id
+            redis_cli = get_redis_connection('code')
+            redis_cli.setex(mobile, 500, code)
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
