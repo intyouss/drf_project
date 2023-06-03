@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 
 from common.logs import logger
 from common.SMS import AliYunSMS
-from common.captcha.captcha import captcha
+from libs.captcha.captcha import captcha
 
 
 class ImageAuthCodeView(APIView):
