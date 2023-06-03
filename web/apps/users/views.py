@@ -32,7 +32,7 @@ class RegisterView(APIView):
         uuid = request.data.get('uuid')
         image_code = request.data.get('image_code')
 
-        if not all([username, password, email, password_confirmation]):
+        if not all([username, password, email, password_confirmation, uuid, image_code]):
             return Response({'error': "缺少必要参数"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         if Users.objects.filter(username=username).exists():
             return Response({'error': "用户已存在"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
