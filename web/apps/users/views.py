@@ -1,21 +1,17 @@
 import os
-import random
 import re
 
 from django.conf import settings
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse
 from django_redis import get_redis_connection
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, mixins
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from common.SMS import AliYunSMS
-from common.captcha.captcha import captcha
 from .models import Users, Address, Area
 from .permissions.address import AddressPermission
 from .permissions.users import UserPermission
@@ -223,40 +219,6 @@ class AddressView(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
                 item.is_default = False
                 item.save()
         return Response({'message': '设置成功'}, status=status.HTTP_200_OK)
-
-
-class SendSMSView(APIView):
-    """短信验证码"""
-
-    throttle_classes = (AnonRateThrottle,)
-
-    def post(self, request):
-        mobile = request.data.get('mobile')
-        res = re.match(r"^1(3[0-9]|5[0-3,5-9]|7[1-3,5-8]|8[0-9])\d{8}$", mobile)
-        if not res:
-            return Response({'error': '无效的手机号码'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        code = self.get_random_code()
-        result = AliYunSMS(mobile=mobile, sms_code=code).send_msg()
-        if result['code'] == 'YES':
-            redis_cli = get_redis_connection('code')
-            redis_cli.setex(mobile, 500, code)
-            return Response(result, status=status.HTTP_200_OK)
-        else:
-            return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    @staticmethod
-    def get_random_code():
-        return ''.join(random.sample('0123456789', 6))
-
-
-class ImageAuthCodeView(APIView):
-    """图片验证码视图"""
-
-    def get(self, request, uuid):
-        text, image = captcha.generate_captcha()
-        redis_cli = get_redis_connection('image_code')
-        redis_cli.setex(uuid, 100, text)
-        return HttpResponse(image, content_type='image/jpeg')
 
 
 class AreaView(GenericViewSet, mixins.ListModelMixin):

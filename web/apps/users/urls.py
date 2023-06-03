@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
-from .views import LoginView, RegisterView, UserView, AddressView, SendSMSView, AreaView, ImageAuthCodeView
+from .views import LoginView, RegisterView, UserView, AddressView, AreaView
 
 urlpatterns = [
     path('login/', LoginView.as_view()),
@@ -28,8 +28,6 @@ urlpatterns = [
     path('address/<int:pk>/default/', AddressView.as_view({
         'put': 'set_default_address'
     })),
-    # 发送短信验证码
-    path('sms/send/', SendSMSView.as_view()),
     # 绑定手机号
     path('<int:pk>/mobile/bind/', UserView.as_view({
         'put': 'bind_mobile'
@@ -53,7 +51,5 @@ urlpatterns = [
     # 查询省市区县数据
     path('area/', AreaView.as_view({
         'get': 'list'
-    })),
-    # 获取图片验证码
-    path('imagecode/<uuid>/', ImageAuthCodeView.as_view())
+    }))
 ]
