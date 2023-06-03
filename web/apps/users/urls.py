@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
-from .views import LoginView, RegisterView, UserView, AddressView, SendSMSView, AreaView
+from .views import LoginView, RegisterView, UserView, AddressView, SendSMSView, AreaView, ImageAuthCodeView
 
 urlpatterns = [
     path('login/', LoginView.as_view()),
@@ -53,5 +53,7 @@ urlpatterns = [
     # 查询省市区县数据
     path('area/', AreaView.as_view({
         'get': 'list'
-    }))
+    })),
+    # 获取图片验证码
+    path('imagecode/<uuid>/', ImageAuthCodeView.as_view())
 ]

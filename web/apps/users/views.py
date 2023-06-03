@@ -3,7 +3,7 @@ import random
 import re
 
 from django.conf import settings
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django_redis import get_redis_connection
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -15,6 +15,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from common.SMS import AliYunSMS
+from common.captcha.captcha import captcha
 from .models import Users, Address, Area
 from .permissions.address import AddressPermission
 from .permissions.users import UserPermission
@@ -32,6 +33,8 @@ class RegisterView(APIView):
         password = request.data.get('password')
         email = request.data.get('email')
         password_confirmation = request.data.get('password_confirmation')
+        uuid = request.data.get('uuid')
+        image_code = request.data.get('image_code')
 
         if not all([username, password, email, password_confirmation]):
             return Response({'error': "缺少必要参数"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
@@ -45,6 +48,13 @@ class RegisterView(APIView):
             return Response({'error': "该邮箱已注册"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         if not re.match(r'^[a-z0-9][\w.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
             return Response({'error': "邮箱格式错误"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        redis_cli = get_redis_connection('image_code')
+        result = redis_cli.get(uuid)
+        redis_cli.delete(uuid)
+        if not result:
+            return Response({'error': "图片验证码已过期"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if result.lower() != image_code:
+            return Response({'error': "图片验证码错误"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
         obj = Users.objects.create_user(username=username, email=email, password=password)
         res = {
@@ -237,6 +247,16 @@ class SendSMSView(APIView):
     @staticmethod
     def get_random_code():
         return ''.join(random.sample('0123456789', 6))
+
+
+class ImageAuthCodeView(APIView):
+    """图片验证码视图"""
+
+    def get(self, request, uuid):
+        text, image = captcha.generate_captcha()
+        redis_cli = get_redis_connection('image_code')
+        redis_cli.setex(uuid, 100, text)
+        return HttpResponse(image, content_type='image/jpeg')
 
 
 class AreaView(GenericViewSet, mixins.ListModelMixin):
