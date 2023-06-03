@@ -263,10 +263,11 @@ SESSION_CACHE_ALIAS = 'session'
 # Logging 日志
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,  # 是否禁用已经存在的日志器
+    'disable_existing_loggers': True,  # 是否禁用已经存在的日志器
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(lineno)d %(message)s'
+            'format': '[%(asctime)s] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] '
+                      '[%(levelname)s]- %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(module)s %(lineno)d %(message)s'
@@ -290,7 +291,8 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, f'logs/{time.strftime("%Y-%m-%d", time.localtime())}.log'),
             'maxBytes': 300 * 1024 * 1024,
             'backupCount': 10,
-            'formatter': 'verbose'
+            'formatter': 'verbose',
+            'encoding': 'utf-8'
         },
     },
     'loggers': {  # 日志器
