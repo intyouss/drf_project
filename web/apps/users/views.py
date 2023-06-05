@@ -196,13 +196,26 @@ class FileView(APIView):
         return Response({'error': '没有找到该文件'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class AddressView(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin,
+class AddressView(GenericViewSet, mixins.CreateModelMixin,
                   mixins.DestroyModelMixin, mixins.UpdateModelMixin):
     """地址管理视图"""
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
 
     permission_classes = [IsAuthenticated, AddressPermission]
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        city = data.get('city')
+        if city[-1] == '市':
+            data['city'] = city[:-1]
+        if not Area.objects.filter(level=1, name=data.get('province')).exists():
+            return Response({'error': '省份不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if not Area.objects.filter(level=2, name=data.get('city')).exists():
+            return Response({'error': '城市不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        if not Area.objects.filter(level=3, name=data.get('county')).exists():
+            return Response({'error': '区县不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        return super().create(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset()).filter(user=request.user)
