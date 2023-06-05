@@ -80,7 +80,7 @@ class LoginView(TokenObtainPairView):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class UserView(GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+class UserView(GenericViewSet, mixins.RetrieveModelMixin):
 
     queryset = Users.objects.all()
     serializer_class = UserSerializer
@@ -202,7 +202,6 @@ class AddressView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin
     """地址管理视图"""
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
-
     permission_classes = [IsAuthenticated, AddressPermission]
 
     def create(self, request, *args, **kwargs):
@@ -254,6 +253,6 @@ class AdminView(GenericViewSet):
     def set_vip(self, request, *args, **kwargs):
         """设置VIP"""
         instance = self.get_object()
-        instance.is_vip = True
+        instance.is_vip = request.data.get('is_vip')
         instance.save()
-        return Response({'message': '设置VIP成功'}, status=status.HTTP_200_OK)
+        return Response({'message': '设置成功'}, status=status.HTTP_200_OK)
