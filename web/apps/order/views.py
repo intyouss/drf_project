@@ -7,9 +7,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
-from users.models import Address
+from users.models import Address, Users
 
 from common.pay import ALiPay
+from common.shop_config import VIP_DISCOUNT
 from .models import Order, OrderGoods, OrderComment
 from .permissions.order import OrderPermission
 from .permissions.order_comment import OrderCommentPermission
@@ -60,11 +61,13 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
                 OrderGoods.objects.create(
                     order=order, goods=cart.goods, number=cart.number, price=cart.goods.price)
                 cart.delete()
+            if Users.objects.filter(id=request.user.id, is_vip=True).exists():
+                amount = float(amount) * VIP_DISCOUNT
             order.amount = amount
             order.save()
-        except Exception:
+        except Exception as e:
             transaction.savepoint_rollback(save_id)
-            return Response({'error': '服务端异常，订单创建失败'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             transaction.savepoint_commit(save_id)
             ser = self.get_serializer(order)

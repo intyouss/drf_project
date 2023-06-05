@@ -9,6 +9,7 @@ class Users(AbstractUser, BaseModel):
     """用户表"""
     mobile = models.CharField(max_length=11, default='', verbose_name='手机号码')
     avatar = models.ImageField(verbose_name='用户头像', blank=True, null=True)
+    is_vip = models.BooleanField(verbose_name='是否为贵宾身份', default=False)
 
     class Meta:
         db_table = 'users'

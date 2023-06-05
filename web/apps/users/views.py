@@ -196,7 +196,7 @@ class FileView(APIView):
         return Response({'error': '没有找到该文件'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class AddressView(GenericViewSet, mixins.CreateModelMixin,
+class AddressView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin,
                   mixins.DestroyModelMixin, mixins.UpdateModelMixin):
     """地址管理视图"""
     queryset = Address.objects.all()
@@ -206,6 +206,8 @@ class AddressView(GenericViewSet, mixins.CreateModelMixin,
 
     def create(self, request, *args, **kwargs):
         data = request.data
+        if data.get('user') != request.user.id:
+            return Response({'error': '没有权限进行此操作'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         city = data.get('city')
         if city[-1] == '市':
             data['city'] = city[:-1]
