@@ -209,11 +209,13 @@ class AddressView(GenericViewSet, mixins.CreateModelMixin,
         city = data.get('city')
         if city[-1] == '市':
             data['city'] = city[:-1]
-        if not Area.objects.filter(level=1, name=data.get('province')).exists():
+        if not Area.objects.filter(level=1, name=data.get('province'), pid=1).exists():
             return Response({'error': '省份不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        if not Area.objects.filter(level=2, name=data.get('city')).exists():
+        province = Area.objects.get(level=1, name=data.get('province'), pid=1)
+        if not Area.objects.filter(level=2, name=data.get('city'), pid=province.id).exists():
             return Response({'error': '城市不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        if not Area.objects.filter(level=3, name=data.get('county')).exists():
+        city = Area.objects.get(level=2, name=data.get('city'), pid=province.id)
+        if not Area.objects.filter(level=3, name=data.get('county'), pid=city.id).exists():
             return Response({'error': '区县不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         return super().create(request, *args, **kwargs)
 
