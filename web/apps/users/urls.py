@@ -15,7 +15,7 @@ urlpatterns = [
     # 上传头像路由
     path('<int:pk>/avatar/upload/', UserView.as_view({'post': 'upload_avatar'})),
     # 管理员设置VIP
-    path('<int:pk>/vip/', AdminView.as_view({
+    path('admin/<int:pk>/vip/', AdminView.as_view({
         'put': 'set_vip'
     })),
     # 添加地址和获取地址列表的路由
