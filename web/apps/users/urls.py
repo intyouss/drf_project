@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
-from .views import LoginView, RegisterView, UserView, AddressView, AreaView
+from .views import LoginView, RegisterView, UserView, AddressView, AreaView, AdminView
 
 urlpatterns = [
     path('login/', LoginView.as_view()),
@@ -14,6 +14,10 @@ urlpatterns = [
     path('<int:pk>/', UserView.as_view({'get': 'retrieve'})),
     # 上传头像路由
     path('<int:pk>/avatar/upload/', UserView.as_view({'post': 'upload_avatar'})),
+    # 管理员设置VIP
+    path('<int:pk>/vip/', AdminView.as_view({
+        'put': 'set_vip'
+    })),
     # 添加地址和获取地址列表的路由
     path('address/', AddressView.as_view({
         'post': "create",

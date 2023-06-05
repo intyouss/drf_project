@@ -65,9 +65,9 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
                 amount = float(amount) * VIP_DISCOUNT
             order.amount = amount
             order.save()
-        except Exception as e:
+        except Exception:
             transaction.savepoint_rollback(save_id)
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'error': '服务器异常，创建订单失败'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             transaction.savepoint_commit(save_id)
             ser = self.get_serializer(order)

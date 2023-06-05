@@ -14,6 +14,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Users, Address, Area
 from .permissions.address import AddressPermission
+from .permissions.admin import AdminPermission
 from .permissions.users import UserPermission
 from .serializers.address import AddressSerializer
 from .serializers.area import AreaSerializer
@@ -79,7 +80,7 @@ class LoginView(TokenObtainPairView):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class UserView(GenericViewSet, mixins.RetrieveModelMixin):
+class UserView(GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
 
     queryset = Users.objects.all()
     serializer_class = UserSerializer
@@ -245,3 +246,14 @@ class AreaView(GenericViewSet, mixins.ListModelMixin):
     filterset_fields = ('level',)
 
 
+class AdminView(GenericViewSet):
+    """管理员视图"""
+    queryset = Users.objects.all()
+    permission_classes = [IsAuthenticated, AdminPermission]
+
+    def set_vip(self, request, *args, **kwargs):
+        """设置VIP"""
+        instance = self.get_object()
+        instance.is_vip = True
+        instance.save()
+        return Response({'message': '设置VIP成功'}, status=status.HTTP_200_OK)
