@@ -92,3 +92,20 @@ class Collect(models.Model):
         return self.goods
 
 
+class Supplier(BaseModel):
+    """供应商表"""
+    name = models.CharField(verbose_name='商家名', max_length=200, blank=True, null=True)
+    telephone = models.CharField(verbose_name='电话', max_length=16, blank=True, null=True)
+    linker = models.CharField(verbose_name='联系人', max_length=20, blank=True, null=True)
+    office = models.CharField(verbose_name='职务', max_length=20, blank=True, null=True)
+    desc = models.CharField(verbose_name='商家描述', max_length=256, blank=True, null=True)
+
+    objects = Manager()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'goods_supplier'
+        verbose_name = '供应商表'
+        verbose_name_plural = verbose_name

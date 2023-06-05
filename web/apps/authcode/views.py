@@ -9,7 +9,7 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 
 from common.logs import logger
-from common.SMS import AliYunSMS
+from common.sms import AliYunSMS
 from libs.captcha.captcha import captcha
 
 

@@ -6,4 +6,5 @@
 # @Email    : intyou@outlook.com
 # @GitHub   : https://github.com/intyouss
 
+# VIP折扣
 VIP_DISCOUNT = 0.9

@@ -4,13 +4,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 
-from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail
+from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail, Supplier
 from .permissions.collect import CollectPermission
+from .permissions.supplier import SupplierPermission
 from .serializers.collect import CollectSerializer
 from .serializers.detail import DetailSerializer
 from .serializers.goods import GoodsSerializer
 from .serializers.goods_carousel import GoodsCarouselSerializer
 from .serializers.goods_group import GoodsGroupSerializer
+from .serializers.supplier import SupplierSerializer
 
 
 class IndexView(APIView):
@@ -74,4 +76,10 @@ class GoodsGroupView(mixins.ListModelMixin, GenericViewSet):
     queryset = GoodsGroup.objects.filter(is_status=True)
     serializer_class = GoodsGroupSerializer
 
+
+class GoodsSupplierView(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
+    """商品供应商视图"""
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+    permission_classes = [IsAuthenticated, SupplierPermission]
 

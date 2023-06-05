@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import IndexView, GoodsView, CollectView, GoodsGroupView
+from .views import IndexView, GoodsView, CollectView, GoodsGroupView, GoodsSupplierView
 
 urlpatterns = [
     # 商城首页接口
@@ -26,5 +26,9 @@ urlpatterns = [
     # 获取商品分类
     path('group/', GoodsGroupView.as_view({
         'get': 'list'
+    })),
+    path('admin/supplier/', GoodsSupplierView.as_view({
+        'get': 'list',
+        'post': 'create'
     }))
 ]
