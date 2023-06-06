@@ -2,7 +2,7 @@ from rest_framework import status, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet, ModelViewSet
 
 from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail, Supplier
 from .permissions.collect import CollectPermission
@@ -77,7 +77,7 @@ class GoodsGroupView(mixins.ListModelMixin, GenericViewSet):
     serializer_class = GoodsGroupSerializer
 
 
-class GoodsSupplierView(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
+class GoodsSupplierView(ModelViewSet):
     """商品供应商视图"""
     queryset = Supplier.objects.all()
     serializer_class = SupplierSerializer

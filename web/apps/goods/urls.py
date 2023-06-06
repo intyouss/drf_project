@@ -27,8 +27,15 @@ urlpatterns = [
     path('group/', GoodsGroupView.as_view({
         'get': 'list'
     })),
+    # 获取供应商信息及添加供应商
     path('admin/supplier/', GoodsSupplierView.as_view({
         'get': 'list',
         'post': 'create'
+    })),
+    # 获取单一供应商，删除，更新
+    path('admin/supplier/<int:pk>', GoodsSupplierView.as_view({
+        'put': 'update',
+        'delete': 'destroy',
+        'get': 'retrieve'
     }))
 ]
