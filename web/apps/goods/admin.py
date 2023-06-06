@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import GoodsGroup, Goods, GoodsCarousel, Detail, Collect
+from .models import GoodsGroup, Goods, GoodsCarousel, Detail, Collect, Supplier
 
 
 @admin.register(GoodsGroup)
@@ -15,7 +15,12 @@ class GoodsAdmin(admin.ModelAdmin):
 
 @admin.register(Detail)
 class DetailAdmin(admin.ModelAdmin):
-    list_display = ['goods', 'producer', 'norms']
+    list_display = ['goods', 'get_producer', 'norms']
+
+    def get_producer(self, obj):
+        return ','.join([str(tag) for tag in obj.producer.all()])
+
+    get_producer.short_description = '供应商'
 
 
 @admin.register(GoodsCarousel)
@@ -26,3 +31,8 @@ class GoodsCarouselAdmin(admin.ModelAdmin):
 @admin.register(Collect)
 class CollectAdmin(admin.ModelAdmin):
     list_display = ['user', 'goods']
+
+
+@admin.register(Supplier)
+class SupplierAdmin(admin.ModelAdmin):
+    list_display = ['name', 'telephone', 'linker', 'office', 'desc']

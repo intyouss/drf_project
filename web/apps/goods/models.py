@@ -47,7 +47,7 @@ class GoodsGroup(models.Model):
 class Detail(BaseModel):
     """商品详情表"""
     goods = models.OneToOneField('Goods', verbose_name='商品', on_delete=models.CASCADE)
-    producer = models.CharField(verbose_name='厂商', max_length=200)
+    producer = models.ManyToManyField('Supplier', verbose_name='供应商', related_name='goods', blank=True)
     norms = models.CharField(verbose_name='规格', max_length=200)
     details = RichTextField(blank=True, verbose_name='商品详情')
 
