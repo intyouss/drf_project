@@ -12,13 +12,9 @@ from rest_framework.viewsets import GenericViewSet, mixins
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from common.default_permission import BasePermission, AdminPermission
 from .models import Users, Address, Area
-from .permissions.address import AddressPermission
-from .permissions.admin import AdminPermission
-from .permissions.users import UserPermission
-from .serializers.address import AddressSerializer
-from .serializers.area import AreaSerializer
-from .serializers.users import UserSerializer
+from .serializers import AddressSerializer, AreaSerializer, UserSerializer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
 
@@ -84,7 +80,7 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
     queryset = Users.objects.all()
     serializer_class = UserSerializer
     # 设置认证用户才能有权访问
-    permission_classes = [IsAuthenticated, UserPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def upload_avatar(self, request, *args, **kwargs):
         """上传用户头像"""
@@ -202,7 +198,7 @@ class AddressView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin
     """地址管理视图"""
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
-    permission_classes = [IsAuthenticated, AddressPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def create(self, request, *args, **kwargs):
         data = request.data

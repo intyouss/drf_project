@@ -4,17 +4,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet, ModelViewSet
 
+from common.default_permission import BasePermission, AdminPermission
 from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail, Supplier, StockInfo
-from .permissions.collect import CollectPermission
-from .permissions.stock import StockInfoPermission
-from .permissions.supplier import SupplierPermission
-from .serializers.collect import CollectSerializer
-from .serializers.detail import DetailSerializer
-from .serializers.goods import GoodsSerializer
-from .serializers.goods_carousel import GoodsCarouselSerializer
-from .serializers.goods_group import GoodsGroupSerializer
-from .serializers.stock import StockInfoSerializer
-from .serializers.supplier import SupplierSerializer
+from .serializers import (CollectSerializer, DetailSerializer, GoodsSerializer, GoodsCarouselSerializer,
+                          GoodsGroupSerializer, StockInfoSerializer, SupplierSerializer)
 
 
 class IndexView(APIView):
@@ -57,7 +50,7 @@ class CollectView(mixins.DestroyModelMixin, mixins.CreateModelMixin, GenericView
     queryset = Collect.objects.all()
     serializer_class = CollectSerializer
     # 设置认证用户才能有权访问
-    permission_classes = [IsAuthenticated, CollectPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def create(self, request, *args, **kwargs):
         user = request.user
@@ -83,14 +76,14 @@ class GoodsSupplierView(ModelViewSet):
     """商品供应商视图"""
     queryset = Supplier.objects.all()
     serializer_class = SupplierSerializer
-    permission_classes = [IsAuthenticated, SupplierPermission]
+    permission_classes = [IsAuthenticated, AdminPermission]
 
 
 class GoodsStockView(mixins.DestroyModelMixin, mixins.ListModelMixin, GenericViewSet):
     """商品入库视图：增删查"""
     queryset = StockInfo.objects.all()
     serializer_class = StockInfoSerializer
-    permission_classes = [IsAuthenticated, StockInfoPermission]
+    permission_classes = [IsAuthenticated, AdminPermission]
     filterset_fields = ['goods', 'admin', 'producer']
 
     def create(self, request, *args, **kwargs):
