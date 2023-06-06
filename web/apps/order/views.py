@@ -9,21 +9,18 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from users.models import Address, Users
 
+from common.default_permission import BasePermission
 from common.pay import ALiPay
 from common.shop_config import VIP_DISCOUNT
 from .models import Order, OrderGoods, OrderComment
-from .permissions.order import OrderPermission
-from .permissions.order_comment import OrderCommentPermission
-from .serializers.order import OrderSerializer
-from .serializers.order_comment import OrderCommentSerializer
-from .serializers.order_goods import OrderGoodsSerializer
+from .serializers import OrderSerializer, OrderCommentSerializer, OrderGoodsSerializer
 
 
 class OrderView(GenericViewSet, mixins.ListModelMixin):
     """订单视图"""
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated, OrderPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
     filterset_fields = ['status']  # 可以实现通过参数查询功能
 
     @transaction.atomic  # 添加事务
@@ -105,7 +102,7 @@ class OrderCommentView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModel
     """订单商品评价视图"""
     queryset = OrderComment.objects.all()
     serializer_class = OrderCommentSerializer
-    permission_classes = [IsAuthenticated, OrderCommentPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
     filterset_fields = ['goods', 'order']
 
     @transaction.atomic

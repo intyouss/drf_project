@@ -3,9 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from common.default_permission import BasePermission
 from .models import Cart
-from .permissions.cart import CartPermission
-from .serializers.cart import CartSerializer, ReadCartSerializer
+from .serializers import CartSerializer, ReadCartSerializer
 
 
 class CartView(GenericViewSet, mixins.CreateModelMixin,
@@ -14,7 +14,7 @@ class CartView(GenericViewSet, mixins.CreateModelMixin,
     """添加购物车商品视图"""
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    permission_classes = [IsAuthenticated, CartPermission]
+    permission_classes = [IsAuthenticated, BasePermission]
 
     def get_serializer_class(self):
         """读写分离"""
