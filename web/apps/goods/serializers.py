@@ -26,14 +26,6 @@ class DetailSerializer(serializers.ModelSerializer):
         fields = ['producer', "norms", "details"]
 
 
-class GoodsSerializer(serializers.ModelSerializer):
-    """商品序列化器"""
-
-    class Meta:
-        model = Goods
-        exclude = ('updated_time', 'created_time',)
-
-
 class GoodsCarouselSerializer(serializers.ModelSerializer):
     """商品轮播图序列化器"""
 
@@ -48,6 +40,15 @@ class GoodsGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = GoodsGroup
         fields = '__all__'
+
+
+class GoodsSerializer(serializers.ModelSerializer):
+    """商品序列化器"""
+    group = GoodsGroupSerializer()
+
+    class Meta:
+        model = Goods
+        exclude = ('updated_time', 'created_time',)
 
 
 class StockInfoSerializer(serializers.ModelSerializer):
