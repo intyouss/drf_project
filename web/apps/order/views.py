@@ -57,7 +57,8 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
                     cart.goods.save()
                 else:
                     transaction.savepoint_rollback(save_id)
-                    return Response({'error': f'{cart.goods.name}库存不足'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                    return Response({'error': f'{cart.goods.name}库存不足'},
+                                    status=status.HTTP_422_UNPROCESSABLE_ENTITY)
                 OrderGoods.objects.create(
                     order=order, goods=cart.goods, number=cart.number, price=cart.goods.price)
                 cart.delete()

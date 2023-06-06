@@ -31,7 +31,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,7 +88,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'web.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -103,7 +101,6 @@ DATABASES = {
         'PORT': '3306'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -123,7 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -134,7 +130,6 @@ TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
 
 USE_TZ = False
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -149,7 +144,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS
 # 允许所有的用户跨域请求
 CORS_ORIGIN_ALLOW_ALL = True
-
 
 # 指定自定义用户模型
 AUTH_USER_MODEL = 'users.Users'
@@ -220,7 +214,6 @@ APP_PID = ''
 # 请先在COMMON/KEY文件夹中放入PEM文件
 PUBLIC_KEY = BASE_DIR / 'common/keys/alipay_public_key.pem'
 PRIVATE_KEY = BASE_DIR / 'common/keys/alipay_private_key.pem'
-
 
 # redis 缓存
 CACHES = {

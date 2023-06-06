@@ -82,4 +82,3 @@ class GoodsSupplierView(mixins.ListModelMixin, mixins.CreateModelMixin, GenericV
     queryset = Supplier.objects.all()
     serializer_class = SupplierSerializer
     permission_classes = [IsAuthenticated, SupplierPermission]
-

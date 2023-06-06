@@ -16,6 +16,7 @@ class MyBackend(ModelBackend):
     """
     自定义登录认证类
     """
+
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             user = Users.objects.get(Q(username=username) | Q(mobile=username) | Q(email=username))

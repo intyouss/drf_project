@@ -81,7 +81,6 @@ class LoginView(TokenObtainPairView):
 
 
 class UserView(GenericViewSet, mixins.RetrieveModelMixin):
-
     queryset = Users.objects.all()
     serializer_class = UserSerializer
     # 设置认证用户才能有权访问
@@ -92,7 +91,7 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
         avatar = request.data.get('avatar')
         if not avatar:
             return Response({'error': '上传失败，文件不能为空'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        if avatar.size > 1024*300:
+        if avatar.size > 1024 * 300:
             return Response({'error': '上传失败，文件大小不能超过300kb'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         user = request.get_object()
         serializer = self.get_serializer(user, data={"avatar": avatar}, partial=True)
@@ -190,6 +189,7 @@ class UserView(GenericViewSet, mixins.RetrieveModelMixin):
 
 class FileView(APIView):
     """获取头像文件"""
+
     def get(self, request, name):
         path = settings.MEDIA_ROOT / name
         if os.path.isfile(path):

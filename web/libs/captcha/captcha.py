@@ -3,9 +3,9 @@
 
 # refer to `https://bitbucket.org/akorn/wheezy.captcha`
 
+import os.path
 import random
 import string
-import os.path
 from io import BytesIO
 
 from PIL import Image
@@ -213,6 +213,7 @@ class Captcha(object):
     def generate_captcha(self):
         self.initialize()
         return self.captcha("")
+
 
 captcha = Captcha.instance()
 

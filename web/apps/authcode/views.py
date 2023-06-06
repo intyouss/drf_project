@@ -1,5 +1,5 @@
-import re
 import random
+import re
 
 from django.http import HttpResponse
 from django_redis import get_redis_connection

@@ -15,6 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     用户模型序列化器
     """
+
     class Meta:
         model = Users
         fields = ['id', 'username', 'last_name', 'email', 'mobile', 'avatar', 'is_vip']

@@ -13,6 +13,7 @@ from ..models import Cart
 
 class CartSerializer(serializers.ModelSerializer):
     """写入：购物车序列化器"""
+
     class Meta:
         model = Cart
         fields = '__all__'
