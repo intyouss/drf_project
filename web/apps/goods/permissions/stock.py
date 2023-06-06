@@ -1,0 +1,10 @@
+from rest_framework import permissions
+
+
+class StockInfoPermission(permissions.BasePermission):
+    """供应商详情权限限制"""
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_superuser:
+            return True
+        return False

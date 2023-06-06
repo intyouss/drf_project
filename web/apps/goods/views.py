@@ -4,14 +4,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet, ModelViewSet
 
-from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail, Supplier
+from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail, Supplier, StockInfo
 from .permissions.collect import CollectPermission
+from .permissions.stock import StockInfoPermission
 from .permissions.supplier import SupplierPermission
 from .serializers.collect import CollectSerializer
 from .serializers.detail import DetailSerializer
 from .serializers.goods import GoodsSerializer
 from .serializers.goods_carousel import GoodsCarouselSerializer
 from .serializers.goods_group import GoodsGroupSerializer
+from .serializers.stock import StockInfoSerializer
 from .serializers.supplier import SupplierSerializer
 
 
@@ -82,3 +84,11 @@ class GoodsSupplierView(ModelViewSet):
     queryset = Supplier.objects.all()
     serializer_class = SupplierSerializer
     permission_classes = [IsAuthenticated, SupplierPermission]
+
+
+class GoodsStockView(mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+                     mixins.DestroyModelMixin, mixins.ListModelMixin, GenericViewSet):
+    """商品入库视图：增删查"""
+    queryset = StockInfo.objects.all()
+    serializer_class = StockInfoSerializer
+    permission_classes = [IsAuthenticated, StockInfoPermission]

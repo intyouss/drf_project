@@ -1,3 +1,5 @@
+import datetime
+
 from ckeditor.fields import RichTextField
 from django.db import models
 from django.db.models import Manager
@@ -109,4 +111,24 @@ class Supplier(BaseModel):
     class Meta:
         db_table = 'goods_supplier'
         verbose_name = '供应商表'
+        verbose_name_plural = verbose_name
+
+
+class StockInfo(models.Model):
+    """入库信息表"""
+    goods = models.ForeignKey('Goods', verbose_name='入库商品', on_delete=models.CASCADE)
+    producer = models.ForeignKey('Supplier', verbose_name='供应商', on_delete=models.CASCADE)
+    admin = models.ForeignKey('users.Users', verbose_name='管理员', on_delete=models.CASCADE)
+    price = models.FloatField(verbose_name='商品单价')
+    number = models.IntegerField(verbose_name='入库数量')
+    mark = models.CharField(verbose_name='备注', max_length=200, blank=True, null=True)
+    created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    objects = Manager()
+
+    def __str__(self):
+        return self.goods.name
+
+    class Meta:
+        db_table = 'goods_stock_info'
+        verbose_name = '入库信息表'
         verbose_name_plural = verbose_name

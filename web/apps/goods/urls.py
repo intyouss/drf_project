@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import IndexView, GoodsView, CollectView, GoodsGroupView, GoodsSupplierView
+from .views import IndexView, GoodsView, CollectView, GoodsGroupView, GoodsSupplierView, GoodsStockView
 
 urlpatterns = [
     # 商城首页接口
@@ -35,6 +35,16 @@ urlpatterns = [
     # 获取单一供应商，删除，更新
     path('admin/supplier/<int:pk>', GoodsSupplierView.as_view({
         'put': 'update',
+        'delete': 'destroy',
+        'get': 'retrieve'
+    })),
+    # 获取商品入库信息及添加入库账单
+    path('admin/stock/', GoodsStockView.as_view({
+        'get': 'list',
+        'post': 'create'
+    })),
+    # 获取单一供应商，删除
+    path('admin/stock/<int:pk>', GoodsStockView.as_view({
         'delete': 'destroy',
         'get': 'retrieve'
     }))

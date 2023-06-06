@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import GoodsGroup, Goods, GoodsCarousel, Detail, Collect, Supplier
+from .models import GoodsGroup, Goods, GoodsCarousel, Detail, Collect, Supplier, StockInfo
 
 
 @admin.register(GoodsGroup)
@@ -36,3 +36,8 @@ class CollectAdmin(admin.ModelAdmin):
 @admin.register(Supplier)
 class SupplierAdmin(admin.ModelAdmin):
     list_display = ['name', 'telephone', 'linker', 'office', 'desc']
+
+
+@admin.register(StockInfo)
+class StockInfoAdmin(admin.ModelAdmin):
+    list_display = ['goods', 'producer', 'admin', 'price', 'number', 'mark', 'created_time']
