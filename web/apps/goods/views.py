@@ -86,12 +86,12 @@ class GoodsSupplierView(ModelViewSet):
     permission_classes = [IsAuthenticated, SupplierPermission]
 
 
-class GoodsStockView(mixins.RetrieveModelMixin,
-                     mixins.DestroyModelMixin, mixins.ListModelMixin, GenericViewSet):
+class GoodsStockView(mixins.DestroyModelMixin, mixins.ListModelMixin, GenericViewSet):
     """商品入库视图：增删查"""
     queryset = StockInfo.objects.all()
     serializer_class = StockInfoSerializer
     permission_classes = [IsAuthenticated, StockInfoPermission]
+    filterset_fields = ['goods', 'admin', 'producer']
 
     def create(self, request, *args, **kwargs):
         # 创建入库商品账单，并添加至库存

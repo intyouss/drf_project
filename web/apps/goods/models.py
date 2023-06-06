@@ -118,7 +118,7 @@ class StockInfo(models.Model):
     """入库信息表"""
     goods = models.ForeignKey('Goods', verbose_name='入库商品', on_delete=models.CASCADE)
     producer = models.ForeignKey('Supplier', verbose_name='供应商', on_delete=models.CASCADE)
-    admin = models.ForeignKey('users.Users', verbose_name='管理员', on_delete=models.CASCADE)
+    admin = models.ForeignKey('users.Users', verbose_name='管理员', on_delete=models.CASCADE, blank=True)
     price = models.FloatField(verbose_name='商品单价')
     number = models.IntegerField(verbose_name='入库数量')
     mark = models.CharField(verbose_name='备注', max_length=200, blank=True, null=True)

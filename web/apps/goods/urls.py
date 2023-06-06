@@ -33,7 +33,7 @@ urlpatterns = [
         'post': 'create'
     })),
     # 获取单一供应商，删除，更新
-    path('admin/supplier/<int:pk>', GoodsSupplierView.as_view({
+    path('admin/supplier/<int:pk>/', GoodsSupplierView.as_view({
         'put': 'update',
         'delete': 'destroy',
         'get': 'retrieve'
@@ -43,9 +43,8 @@ urlpatterns = [
         'get': 'list',
         'post': 'create'
     })),
-    # 获取单一供应商，删除
-    path('admin/stock/<int:pk>', GoodsStockView.as_view({
-        'delete': 'destroy',
-        'get': 'retrieve'
+    # 商品入库信息删除
+    path('admin/stock/<int:pk>/', GoodsStockView.as_view({
+        'delete': 'destroy'
     }))
 ]
