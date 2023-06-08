@@ -137,15 +137,35 @@ class OrderCommentView(
             return Response({'message': '评论成功'}, status=status.HTTP_201_CREATED)
 
 
-class OrderPayView(APIView):
+class OrderPayView(GenericViewSet):
     """订单支付接口"""
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def check(self, request):
         order_id = request.data.get('orderID')
         if not Order.objects.filter(id=order_id, user=request.user).exists():
             return Response({'error': '订单不存在'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         order = Order.objects.get(id=order_id)
+        amount = order.amount
+        if ClubCard.objects.filter(user=request.user).exists():
+            card = ClubCard.objects.get(user=request.user)
+            if card.money >= amount:
+                return Response({'club': 'YES', 'message': '会员余额可支付'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'club': 'NO', 'message': '会员余额不足'}, status=status.HTTP_200_OK)
+        return Response({'club': 'NO', 'message': '非会员'}, status=status.HTTP_200_OK)
+
+    def club_pay(self, request):
+        order = Order.objects.get(id=request.data.get('orderID'))
+        card = ClubCard.objects.get(user=request.user)
+        card.money -= order.amount
+        order.status = 4
+        card.save()
+        order.save()
+        return Response({'message', '使用会员余额成功支付'}, status=status.HTTP_200_OK)
+
+    def ali_pay(self, request):
+        order = Order.objects.get(id=request.data.get('orderID'))
         amount = order.amount
         order_number = order.order_number
         title = '订单支付'

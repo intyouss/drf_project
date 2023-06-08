@@ -25,6 +25,16 @@ urlpatterns = [
         # 获取订单评论
         'get': 'list'
     })),
-    # 订单支付页面地址获取
-    path('alipay/', OrderPayView.as_view())
+    # 订单支付会员检查
+    path('check/', OrderPayView.as_view({
+        'post': 'check'
+    })),
+    # 支付宝支付界面获取
+    path('ali/pay/', OrderPayView.as_view({
+        'post': 'ali_pay'
+    })),
+    # 会员卡直接支付
+    path('club/pay/', OrderPayView.as_view({
+        'post': 'club_pay'
+    }))
 ]
