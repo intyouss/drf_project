@@ -9,7 +9,6 @@ class Users(AbstractUser, BaseModel):
     """用户表"""
     mobile = models.CharField(max_length=11, default='', verbose_name='手机号码')
     avatar = models.ImageField(verbose_name='用户头像', blank=True, null=True)
-    is_vip = models.BooleanField(verbose_name='是否为贵宾身份', default=False)
 
     class Meta:
         db_table = 'users'
@@ -35,6 +34,17 @@ class Address(models.Model):
         verbose_name = '收货地址表'
         verbose_name_plural = verbose_name
 
+    def merge_address(self):
+        address_str = '{}{}{}{} {} {}'.format(
+            self.province,
+            self.city,
+            self.county,
+            self.address,
+            self.name,
+            self.phone
+        )
+        return address_str
+
 
 class Area(models.Model):
     """
@@ -56,3 +66,26 @@ class Area(models.Model):
         db_table = 'users_area'
         verbose_name = '地区表'
         verbose_name_plural = verbose_name
+
+
+class ClubCard(BaseModel):
+    """
+    会员卡表
+    """
+    def auto_sort():
+        # 方法必须放在字段前面
+        count = ClubCard.objects.count()
+        return '1000000001' if (count is None) else str(count + 1000000001)
+    card_number = models.CharField(verbose_name='卡号', auto_created=True, default=auto_sort, max_length=11)
+    user = models.ForeignKey('Users', verbose_name='用户', on_delete=models.CASCADE, related_name='vip')
+    money = models.FloatField(verbose_name='余额')
+
+    objects = Manager()
+
+    class Meta:
+        db_table = 'users_club_card'
+        verbose_name = '会员卡表'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.card_number

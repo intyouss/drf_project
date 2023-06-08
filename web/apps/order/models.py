@@ -1,3 +1,5 @@
+import time
+
 from django.db import models
 from django.db.models import Manager
 
@@ -37,6 +39,9 @@ class Order(BaseModel):
 
     def __str__(self):
         return self.order_number
+
+    def set_order_number(self):
+        self.order_number = str(int(time.time())) + str(self.user.id)
 
 
 class OrderGoods(BaseModel):

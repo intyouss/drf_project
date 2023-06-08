@@ -38,13 +38,13 @@ class GoodsGroup(models.Model):
 
     objects = Manager()
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         db_table = 'goods_group'
         verbose_name = '商品分类表'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
 
 
 class Detail(BaseModel):
@@ -70,13 +70,13 @@ class GoodsCarousel(BaseModel):
     seq = models.IntegerField(verbose_name='顺序', default=1, blank=True)
     objects = Manager()
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         db_table = 'goods_carousel'
         verbose_name = '商品轮播图表'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
 
 
 class Collect(models.Model):
@@ -105,13 +105,13 @@ class Supplier(BaseModel):
 
     objects = Manager()
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         db_table = 'goods_supplier'
         verbose_name = '供应商表'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
 
 
 class StockInfo(models.Model):
@@ -125,10 +125,10 @@ class StockInfo(models.Model):
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     objects = Manager()
 
-    def __str__(self):
-        return self.goods.name
-
     class Meta:
         db_table = 'goods_stock_info'
         verbose_name = '入库信息表'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.goods.name

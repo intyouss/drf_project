@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet, mixins
+from rest_framework.viewsets import GenericViewSet, mixins, ModelViewSet
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -193,8 +193,7 @@ class FileView(APIView):
         return Response({'error': '没有找到该文件'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class AddressView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin,
-                  mixins.DestroyModelMixin, mixins.UpdateModelMixin):
+class AddressView(ModelViewSet):
     """地址管理视图"""
     queryset = Address.objects.all()
     serializer_class = AddressSerializer

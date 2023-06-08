@@ -8,9 +8,12 @@ from .models import Cart
 from .serializers import CartSerializer, ReadCartSerializer
 
 
-class CartView(GenericViewSet, mixins.CreateModelMixin,
-               mixins.UpdateModelMixin, mixins.DestroyModelMixin
-               ):
+class CartView(
+    GenericViewSet,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin
+):
     """添加购物车商品视图"""
     queryset = Cart.objects.all()
     serializer_class = CartSerializer

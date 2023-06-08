@@ -6,8 +6,15 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet, ModelV
 
 from common.default_permission import BasePermission, AdminPermission
 from .models import GoodsGroup, GoodsCarousel, Goods, Collect, Detail, Supplier, StockInfo
-from .serializers import (CollectSerializer, DetailSerializer, GoodsSerializer, GoodsCarouselSerializer,
-                          GoodsGroupSerializer, StockInfoSerializer, SupplierSerializer)
+from .serializers import (
+    CollectSerializer,
+    DetailSerializer,
+    GoodsSerializer,
+    GoodsCarouselSerializer,
+    GoodsGroupSerializer,
+    StockInfoSerializer,
+    SupplierSerializer
+)
 
 
 class IndexView(APIView):
@@ -45,7 +52,11 @@ class GoodsView(ReadOnlyModelViewSet):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class CollectView(mixins.DestroyModelMixin, mixins.CreateModelMixin, GenericViewSet):
+class CollectView(
+    mixins.DestroyModelMixin,
+    mixins.CreateModelMixin,
+    GenericViewSet
+):
     """收藏商品视图"""
     queryset = Collect.objects.all()
     serializer_class = CollectSerializer
@@ -79,7 +90,11 @@ class GoodsSupplierView(ModelViewSet):
     permission_classes = [IsAuthenticated, AdminPermission]
 
 
-class GoodsStockView(mixins.DestroyModelMixin, mixins.ListModelMixin, GenericViewSet):
+class GoodsStockView(
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet
+):
     """商品入库视图：增删查"""
     queryset = StockInfo.objects.all()
     serializer_class = StockInfoSerializer

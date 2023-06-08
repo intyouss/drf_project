@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Users, Address, Area
+from .models import Users, Address, Area, ClubCard
 
 
 @admin.register(Users)
@@ -16,3 +16,8 @@ class AddressAdmin(admin.ModelAdmin):
 @admin.register(Area)
 class AreaAdmin(admin.ModelAdmin):
     list_display = ['pid', 'name', 'level']
+
+
+@admin.register(ClubCard)
+class AreaAdmin(admin.ModelAdmin):
+    list_display = ['card_number', 'user', 'money']

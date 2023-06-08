@@ -1,5 +1,3 @@
-import time
-
 from cart.models import Cart
 from django.db import transaction
 from rest_framework import status, mixins
@@ -7,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
-from users.models import Address, Users
+from users.models import Address, Users, ClubCard
 
 from common.default_permission import BasePermission
 from common.pay import ALiPay
@@ -29,21 +27,13 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         if not Address.objects.filter(user=request.user, id=address).exists():
             return Response({'error': '传入的收货地址ID错误'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         address_obj = Address.objects.get(id=address, user=request.user)
-        address_str = '{}{}{}{} {} {}'.format(
-            address_obj.province,
-            address_obj.city,
-            address_obj.county,
-            address_obj.address,
-            address_obj.name,
-            address_obj.phone
-        )
         cart_goods = Cart.objects.filter(user=request.user, is_checked=True)
         if not cart_goods.exists():
             return Response({'error': '订单提交失败，未选中商品'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        order_number = str(int(time.time())) + str(request.user)
         save_id = transaction.savepoint()  # 创建保存节点
         try:
-            order = Order.objects.create(user=request.user, address=address_str, order_number=order_number, amount=0)
+            order = Order.objects.create(user=request.user, address=address_obj.merge_address, amount=0)
+            order.set_order_number()
             amount = 0
             for cart in cart_goods:
                 number = cart.number
@@ -59,7 +49,7 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
                 OrderGoods.objects.create(
                     order=order, goods=cart.goods, number=cart.number, price=cart.goods.price)
                 cart.delete()
-            if Users.objects.filter(id=request.user.id, is_vip=True).exists():
+            if ClubCard.objects.filter(user=request.user).exists():
                 amount = float(amount) * VIP_DISCOUNT
             order.amount = amount
             order.save()
@@ -98,7 +88,11 @@ class OrderView(GenericViewSet, mixins.ListModelMixin):
         return Response({'message': '订单已关闭'}, status=status.HTTP_200_OK)
 
 
-class OrderCommentView(GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin):
+class OrderCommentView(
+    GenericViewSet,
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin
+):
     """订单商品评价视图"""
     queryset = OrderComment.objects.all()
     serializer_class = OrderCommentSerializer
