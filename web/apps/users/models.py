@@ -56,9 +56,9 @@ class Area(models.Model):
         (2, '市'),
         (3, '区/县')
     )
-    pid = models.IntegerField(verbose_name='上级ID')
-    name = models.CharField(max_length=32, verbose_name='地区名')
-    level = models.IntegerField(choices=level_choice, verbose_name='区域等级')
+    name = models.CharField(max_length=32, verbose_name='地区名', default='')
+    pid = models.IntegerField(verbose_name='上级ID', default=0)
+    level = models.IntegerField(choices=level_choice, verbose_name='区域等级', default=0)
 
     objects = Manager()
 
